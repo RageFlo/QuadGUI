@@ -64,7 +64,7 @@
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTabLayout.Size = new System.Drawing.Size(984, 412);
+            this.mainTabLayout.Size = new System.Drawing.Size(984, 411);
             this.mainTabLayout.TabIndex = 0;
             // 
             // mainPanConInfo
@@ -81,9 +81,9 @@
             this.mainPanConInfo.Controls.Add(this.lblComPort);
             this.mainPanConInfo.Controls.Add(this.cmbComPorts);
             this.mainPanConInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainPanConInfo.Location = new System.Drawing.Point(3, 385);
+            this.mainPanConInfo.Location = new System.Drawing.Point(3, 383);
             this.mainPanConInfo.Name = "mainPanConInfo";
-            this.mainPanConInfo.Size = new System.Drawing.Size(978, 24);
+            this.mainPanConInfo.Size = new System.Drawing.Size(978, 25);
             this.mainPanConInfo.TabIndex = 0;
             // 
             // lblMessagesRec
@@ -98,7 +98,7 @@
             // lblMessagesSent
             // 
             this.lblMessagesSent.AutoSize = true;
-            this.lblMessagesSent.Location = new System.Drawing.Point(801, 4);
+            this.lblMessagesSent.Location = new System.Drawing.Point(787, 4);
             this.lblMessagesSent.Name = "lblMessagesSent";
             this.lblMessagesSent.Size = new System.Drawing.Size(65, 13);
             this.lblMessagesSent.TabIndex = 7;
@@ -107,7 +107,7 @@
             // lblPingCounter
             // 
             this.lblPingCounter.AutoSize = true;
-            this.lblPingCounter.Location = new System.Drawing.Point(922, 4);
+            this.lblPingCounter.Location = new System.Drawing.Point(897, 4);
             this.lblPingCounter.Name = "lblPingCounter";
             this.lblPingCounter.Size = new System.Drawing.Size(45, 13);
             this.lblPingCounter.TabIndex = 6;
@@ -182,7 +182,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chrDaten.Series.Add(series1);
-            this.chrDaten.Size = new System.Drawing.Size(682, 376);
+            this.chrDaten.Size = new System.Drawing.Size(682, 374);
             this.chrDaten.TabIndex = 1;
             this.chrDaten.Text = "Daten";
             // 
@@ -190,7 +190,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 412);
+            this.ClientSize = new System.Drawing.Size(984, 411);
             this.Controls.Add(this.mainTabLayout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
