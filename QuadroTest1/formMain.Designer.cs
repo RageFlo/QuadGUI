@@ -45,13 +45,13 @@
             this.cmbComPorts = new System.Windows.Forms.ComboBox();
             this.chrDaten = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.pnlDatenAuswahl = new System.Windows.Forms.Panel();
+            this.lblDatenName = new System.Windows.Forms.Label();
             this.lblDatenCode = new System.Windows.Forms.Label();
             this.btnDatenremove = new System.Windows.Forms.Button();
             this.btnDatenAdd = new System.Windows.Forms.Button();
             this.txbmName = new System.Windows.Forms.MaskedTextBox();
             this.txbmCode = new System.Windows.Forms.MaskedTextBox();
             this.lsbDatenAuswahl = new System.Windows.Forms.ListBox();
-            this.lblDatenName = new System.Windows.Forms.Label();
             this.mainTabLayout.SuspendLayout();
             this.mainPanConInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chrDaten)).BeginInit();
@@ -211,6 +211,15 @@
             this.pnlDatenAuswahl.Size = new System.Drawing.Size(290, 185);
             this.pnlDatenAuswahl.TabIndex = 3;
             // 
+            // lblDatenName
+            // 
+            this.lblDatenName.AutoSize = true;
+            this.lblDatenName.Location = new System.Drawing.Point(41, 145);
+            this.lblDatenName.Name = "lblDatenName";
+            this.lblDatenName.Size = new System.Drawing.Size(35, 13);
+            this.lblDatenName.TabIndex = 8;
+            this.lblDatenName.Text = "Name";
+            // 
             // lblDatenCode
             // 
             this.lblDatenCode.AutoSize = true;
@@ -237,6 +246,7 @@
             this.btnDatenAdd.TabIndex = 5;
             this.btnDatenAdd.Text = "Hinzufügen";
             this.btnDatenAdd.UseVisualStyleBackColor = true;
+            this.btnDatenAdd.Click += new System.EventHandler(this.btnDatenAdd_Click);
             // 
             // txbmName
             // 
@@ -261,15 +271,6 @@
             this.lsbDatenAuswahl.Name = "lsbDatenAuswahl";
             this.lsbDatenAuswahl.Size = new System.Drawing.Size(284, 134);
             this.lsbDatenAuswahl.TabIndex = 2;
-            // 
-            // lblDatenName
-            // 
-            this.lblDatenName.AutoSize = true;
-            this.lblDatenName.Location = new System.Drawing.Point(41, 145);
-            this.lblDatenName.Name = "lblDatenName";
-            this.lblDatenName.Size = new System.Drawing.Size(35, 13);
-            this.lblDatenName.TabIndex = 8;
-            this.lblDatenName.Text = "Name";
             // 
             // formMain
             // 

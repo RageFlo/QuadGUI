@@ -101,7 +101,7 @@ namespace QuadroTest1
                     lblConState.BackColor = System.Drawing.Color.LightPink;
                     break;
             }
-            for(int i = 0; i < 7 ; i++){
+            for(int i = 4; i < 7 ; i++){
                 chrDaten.Series[i].Points.Clear();
                 foreach (double y in mKommu.recData.Where(x => x.code==i).Select<Kommunikator.armSetting,Int32>(x => x.value))
                     chrDaten.Series[i].Points.AddY(y);
@@ -155,5 +155,17 @@ namespace QuadroTest1
             }    
         }
 
+        private void btnDatenAdd_Click(object sender, EventArgs e)
+        {
+            lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = 0, name = "test" });
+        }
+        public class DatenAuswahlElement
+        {
+            public byte code { get; set; }
+            public string name { get; set; }
+            public override string ToString(){
+                return code + "  " + name;
+            }
+        }
     }
 }
