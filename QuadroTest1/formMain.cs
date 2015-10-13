@@ -16,13 +16,16 @@ namespace QuadroTest1
     {
         private Kommunikator mKommu = null;
         private Timer zyklTimer = new Timer();
-        System.Windows.Forms.DataVisualization.Charting.Series serX = new Series("xAcc");
-        System.Windows.Forms.DataVisualization.Charting.Series serY = new Series("yAcc");
-        System.Windows.Forms.DataVisualization.Charting.Series serZ = new Series("zAcc");
-        System.Windows.Forms.DataVisualization.Charting.Series serTemp = new Series("mpuTemp");
-        System.Windows.Forms.DataVisualization.Charting.Series serGX = new Series("xGyro");
-        System.Windows.Forms.DataVisualization.Charting.Series serGY = new Series("yGyro");
-        System.Windows.Forms.DataVisualization.Charting.Series serGZ = new Series("zGyro");
+                public class DatenAuswahlElement
+        {
+            public byte code { get; set; }
+            public string name { get; set; }
+            public Series serie { get; set; }
+            public override string ToString()
+            {
+                return code + "  " + name;
+            }
+        }
 
 
         public formMain()
@@ -33,45 +36,6 @@ namespace QuadroTest1
             zyklTimer.Tick += new EventHandler(zyklTimer_Tick);
             zyklTimer.Start();
             chrDaten.Series.Clear();
-            
-            serX.AxisLabel = "x Accel";
-            serX.YValueType = ChartValueType.Int32;
-            //serX.IsXValueIndexed = true;
-            serX.ChartType = SeriesChartType.Line;
-            serY.AxisLabel = "y Accel";
-            serY.YValueType = ChartValueType.Int32;
-            //serY.IsXValueIndexed = true;
-            serY.ChartType = SeriesChartType.Line;
-            serZ.AxisLabel = "z Accel";
-            serZ.YValueType = ChartValueType.Int32;
-            //serZ.IsXValueIndexed = true;
-            serZ.ChartType = SeriesChartType.Line;
-
-            serTemp.AxisLabel = "Temp Gyro";
-            serTemp.YValueType = ChartValueType.Int32;
-            //serZ.IsXValueIndexed = true;
-            serTemp.ChartType = SeriesChartType.Line;
-
-            serGX.AxisLabel = "x Gyro";
-            serGX.YValueType = ChartValueType.Int32;
-            //serX.IsXValueIndexed = true;
-            serGX.ChartType = SeriesChartType.Line;
-            serGY.AxisLabel = "y Gyro";
-            serGY.YValueType = ChartValueType.Int32;
-            //serY.IsXValueIndexed = true;
-            serGY.ChartType = SeriesChartType.Line;
-            serGZ.AxisLabel = "z Gyro";
-            serGZ.YValueType = ChartValueType.Int32;
-            //serZ.IsXValueIndexed = true;
-            serGZ.ChartType = SeriesChartType.Line;
-
-            chrDaten.Series.Add(serX);
-            chrDaten.Series.Add(serY);
-            chrDaten.Series.Add(serZ);
-            chrDaten.Series.Add(serTemp);
-            chrDaten.Series.Add(serGX);
-            chrDaten.Series.Add(serGY);
-            chrDaten.Series.Add(serGZ);
         }
 
         void zyklTimer_Tick(object sender, EventArgs e)
@@ -101,10 +65,10 @@ namespace QuadroTest1
                     lblConState.BackColor = System.Drawing.Color.LightPink;
                     break;
             }
-            for(int i = 4; i < 7 ; i++){
-                chrDaten.Series[i].Points.Clear();
-                foreach (double y in mKommu.recData.Where(x => x.code==i).Select<Kommunikator.armSetting,Int32>(x => x.value))
-                    chrDaten.Series[i].Points.AddY(y);
+            foreach(DatenAuswahlElement datenEle in lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>()){
+                datenEle.serie.Points.Clear();
+                foreach (double y in mKommu.recData.Where(x => x.code==datenEle.code).Select<Kommunikator.armSetting,Int32>(x => x.value))
+                    datenEle.serie.Points.AddY(y);
             }
         }
 
@@ -157,15 +121,42 @@ namespace QuadroTest1
 
         private void btnDatenAdd_Click(object sender, EventArgs e)
         {
-            lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = 0, name = "test" });
-        }
-        public class DatenAuswahlElement
-        {
-            public byte code { get; set; }
-            public string name { get; set; }
-            public override string ToString(){
-                return code + "  " + name;
+            byte newCode;
+            string newName;
+            bool checkExists;
+            try { 
+                newCode = Convert.ToByte(txbmCode.Text);
+            }
+            catch
+            {
+                return;
+            }
+            newName = txbmName.Text;
+            checkExists = lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>().Select(x => x.code).Contains(newCode);
+            checkExists |= lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>().Select(x => x.name).Contains(newName);
+            if (lsbDatenAuswahl.Items.Count < 8 && !checkExists && newName.Length>0)
+            {
+                Series newSerie = new Series(newName);
+                newSerie.AxisLabel = newName;
+                newSerie.YValueType = ChartValueType.Int32;
+                //serY.IsXValueIndexed = true;
+                newSerie.ChartType = SeriesChartType.Line;
+                lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie });
+                txbmCode.Text = (newCode + 1).ToString();
+                chrDaten.Series.Add(newSerie);
             }
         }
+
+        private void btnDatenremove_Click(object sender, EventArgs e)
+        {
+            if (lsbDatenAuswahl.SelectedItem != null && lsbDatenAuswahl.SelectedItem.GetType().Name == "DatenAuswahlElement")
+            {
+                DatenAuswahlElement toDelete = (DatenAuswahlElement)lsbDatenAuswahl.SelectedItem;
+                chrDaten.Series.Remove(toDelete.serie);
+                lsbDatenAuswahl.Items.Remove(toDelete);
+            }
+        }
+
+
     }
 }

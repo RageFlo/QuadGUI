@@ -62,8 +62,8 @@
             // 
             this.mainTabLayout.AutoSize = true;
             this.mainTabLayout.ColumnCount = 2;
-            this.mainTabLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
-            this.mainTabLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.mainTabLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.mainTabLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTabLayout.Controls.Add(this.mainPanConInfo, 0, 2);
             this.mainTabLayout.Controls.Add(this.chrDaten, 0, 0);
             this.mainTabLayout.Controls.Add(this.pnlDatenAuswahl, 1, 0);
@@ -71,10 +71,10 @@
             this.mainTabLayout.Location = new System.Drawing.Point(0, 0);
             this.mainTabLayout.Name = "mainTabLayout";
             this.mainTabLayout.RowCount = 3;
-            this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTabLayout.Size = new System.Drawing.Size(984, 412);
+            this.mainTabLayout.Size = new System.Drawing.Size(984, 411);
             this.mainTabLayout.TabIndex = 0;
             // 
             // mainPanConInfo
@@ -208,13 +208,13 @@
             this.pnlDatenAuswahl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlDatenAuswahl.Location = new System.Drawing.Point(691, 3);
             this.pnlDatenAuswahl.Name = "pnlDatenAuswahl";
-            this.pnlDatenAuswahl.Size = new System.Drawing.Size(290, 185);
+            this.pnlDatenAuswahl.Size = new System.Drawing.Size(290, 155);
             this.pnlDatenAuswahl.TabIndex = 3;
             // 
             // lblDatenName
             // 
             this.lblDatenName.AutoSize = true;
-            this.lblDatenName.Location = new System.Drawing.Point(41, 145);
+            this.lblDatenName.Location = new System.Drawing.Point(36, 114);
             this.lblDatenName.Name = "lblDatenName";
             this.lblDatenName.Size = new System.Drawing.Size(35, 13);
             this.lblDatenName.TabIndex = 8;
@@ -223,7 +223,7 @@
             // lblDatenCode
             // 
             this.lblDatenCode.AutoSize = true;
-            this.lblDatenCode.Location = new System.Drawing.Point(3, 146);
+            this.lblDatenCode.Location = new System.Drawing.Point(3, 114);
             this.lblDatenCode.Name = "lblDatenCode";
             this.lblDatenCode.Size = new System.Drawing.Size(32, 13);
             this.lblDatenCode.TabIndex = 7;
@@ -231,16 +231,17 @@
             // 
             // btnDatenremove
             // 
-            this.btnDatenremove.Location = new System.Drawing.Point(212, 158);
+            this.btnDatenremove.Location = new System.Drawing.Point(206, 130);
             this.btnDatenremove.Name = "btnDatenremove";
             this.btnDatenremove.Size = new System.Drawing.Size(75, 23);
             this.btnDatenremove.TabIndex = 6;
             this.btnDatenremove.Text = "Entfernen";
             this.btnDatenremove.UseVisualStyleBackColor = true;
+            this.btnDatenremove.Click += new System.EventHandler(this.btnDatenremove_Click);
             // 
             // btnDatenAdd
             // 
-            this.btnDatenAdd.Location = new System.Drawing.Point(109, 158);
+            this.btnDatenAdd.Location = new System.Drawing.Point(108, 130);
             this.btnDatenAdd.Name = "btnDatenAdd";
             this.btnDatenAdd.Size = new System.Drawing.Size(75, 23);
             this.btnDatenAdd.TabIndex = 5;
@@ -250,7 +251,7 @@
             // 
             // txbmName
             // 
-            this.txbmName.Location = new System.Drawing.Point(39, 161);
+            this.txbmName.Location = new System.Drawing.Point(39, 130);
             this.txbmName.Mask = "aaaaaaaaa";
             this.txbmName.Name = "txbmName";
             this.txbmName.Size = new System.Drawing.Size(63, 20);
@@ -258,7 +259,7 @@
             // 
             // txbmCode
             // 
-            this.txbmCode.Location = new System.Drawing.Point(4, 162);
+            this.txbmCode.Location = new System.Drawing.Point(4, 130);
             this.txbmCode.Mask = "000";
             this.txbmCode.Name = "txbmCode";
             this.txbmCode.Size = new System.Drawing.Size(28, 20);
@@ -269,14 +270,14 @@
             this.lsbDatenAuswahl.FormattingEnabled = true;
             this.lsbDatenAuswahl.Location = new System.Drawing.Point(3, 3);
             this.lsbDatenAuswahl.Name = "lsbDatenAuswahl";
-            this.lsbDatenAuswahl.Size = new System.Drawing.Size(284, 134);
+            this.lsbDatenAuswahl.Size = new System.Drawing.Size(284, 108);
             this.lsbDatenAuswahl.TabIndex = 2;
             // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 412);
+            this.ClientSize = new System.Drawing.Size(984, 411);
             this.Controls.Add(this.mainTabLayout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
