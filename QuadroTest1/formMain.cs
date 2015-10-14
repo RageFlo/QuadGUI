@@ -16,7 +16,8 @@ namespace QuadroTest1
     {
         private Kommunikator mKommu = null;
         private Timer zyklTimer = new Timer();
-                public class DatenAuswahlElement
+        private uint tick200ms = 0;  
+        public class DatenAuswahlElement
         {
             public byte code { get; set; }
             public string name { get; set; }
@@ -36,12 +37,22 @@ namespace QuadroTest1
             zyklTimer.Tick += new EventHandler(zyklTimer_Tick);
             zyklTimer.Start();
             chrDaten.Series.Clear();
+
+            datenAuswahlAdd(0, "Accel X");
+            datenAuswahlAdd(1, "Accel Y");
+            datenAuswahlAdd(2, "Accel Z");
+            datenAuswahlAdd(3, "Temp");
+            datenAuswahlAdd(4, "Gyro X");
+            datenAuswahlAdd(5, "Gyro Y");
+            datenAuswahlAdd(6, "Gyro Z");
+
         }
 
         void zyklTimer_Tick(object sender, EventArgs e)
         {
             if (mKommu == null)
                 return;
+            tick200ms++;
             mKommu.zyklischMain();
             lblPingCounter.Text = "Pings: " + Convert.ToString(mKommu.cntping);
             lblMessagesRec.Text = "Empfangen: " + Convert.ToString(mKommu.cntRec);
@@ -65,11 +76,14 @@ namespace QuadroTest1
                     lblConState.BackColor = System.Drawing.Color.LightPink;
                     break;
             }
-            foreach(DatenAuswahlElement datenEle in lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>()){
+
+            //Daten einlesen
+            foreach(DatenAuswahlElement datenEle in lsbDatenAuswahl.CheckedItems.Cast<DatenAuswahlElement>()){
                 datenEle.serie.Points.Clear();
-                foreach (double y in mKommu.recData.Where(x => x.code==datenEle.code).Select<Kommunikator.armSetting,Int32>(x => x.value))
-                    datenEle.serie.Points.AddY(y);
+                foreach (double y in mKommu.recData.Where(x => x.code == datenEle.code).Select<Kommunikator.armSetting, Int32>(x => x.value))
+                    datenEle.serie.Points.AddXY(tick200ms, y);
             }
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -114,7 +128,7 @@ namespace QuadroTest1
             }
             else
             {
-                //DO SOMETHING TO CLOSE!
+                mKommu.close();
                 mKommu = new Kommunikator(comPort, baudRate);
             }    
         }
@@ -122,8 +136,6 @@ namespace QuadroTest1
         private void btnDatenAdd_Click(object sender, EventArgs e)
         {
             byte newCode;
-            string newName;
-            bool checkExists;
             try { 
                 newCode = Convert.ToByte(txbmCode.Text);
             }
@@ -131,7 +143,12 @@ namespace QuadroTest1
             {
                 return;
             }
-            newName = txbmName.Text;
+            datenAuswahlAdd(newCode, txbmName.Text);
+        }
+
+        private void datenAuswahlAdd(byte newCode, string newName)
+        {
+            bool checkExists;
             checkExists = lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>().Select(x => x.code).Contains(newCode);
             checkExists |= lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>().Select(x => x.name).Contains(newName);
             if (lsbDatenAuswahl.Items.Count < 8 && !checkExists && newName.Length>0)
@@ -141,7 +158,7 @@ namespace QuadroTest1
                 newSerie.YValueType = ChartValueType.Int32;
                 //serY.IsXValueIndexed = true;
                 newSerie.ChartType = SeriesChartType.Line;
-                lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie });
+                lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie },true);
                 txbmCode.Text = (newCode + 1).ToString();
                 chrDaten.Series.Add(newSerie);
             }
@@ -155,6 +172,11 @@ namespace QuadroTest1
                 chrDaten.Series.Remove(toDelete.serie);
                 lsbDatenAuswahl.Items.Remove(toDelete);
             }
+        }
+
+        private void lsbDatenAuswahl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+          
         }
 
 

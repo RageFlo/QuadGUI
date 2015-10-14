@@ -51,7 +51,7 @@
             this.btnDatenAdd = new System.Windows.Forms.Button();
             this.txbmName = new System.Windows.Forms.MaskedTextBox();
             this.txbmCode = new System.Windows.Forms.MaskedTextBox();
-            this.lsbDatenAuswahl = new System.Windows.Forms.ListBox();
+            this.lsbDatenAuswahl = new System.Windows.Forms.CheckedListBox();
             this.mainTabLayout.SuspendLayout();
             this.mainPanConInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chrDaten)).BeginInit();
@@ -72,9 +72,9 @@
             this.mainTabLayout.Name = "mainTabLayout";
             this.mainTabLayout.RowCount = 3;
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTabLayout.Size = new System.Drawing.Size(984, 411);
+            this.mainTabLayout.Size = new System.Drawing.Size(984, 412);
             this.mainTabLayout.TabIndex = 0;
             // 
             // mainPanConInfo
@@ -90,7 +90,7 @@
             this.mainPanConInfo.Controls.Add(this.txtBaudRate);
             this.mainPanConInfo.Controls.Add(this.lblComPort);
             this.mainPanConInfo.Controls.Add(this.cmbComPorts);
-            this.mainPanConInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainPanConInfo.Dock = System.Windows.Forms.DockStyle.Top;
             this.mainPanConInfo.Location = new System.Drawing.Point(3, 385);
             this.mainPanConInfo.Name = "mainPanConInfo";
             this.mainPanConInfo.Size = new System.Drawing.Size(978, 24);
@@ -270,14 +270,15 @@
             this.lsbDatenAuswahl.FormattingEnabled = true;
             this.lsbDatenAuswahl.Location = new System.Drawing.Point(3, 3);
             this.lsbDatenAuswahl.Name = "lsbDatenAuswahl";
-            this.lsbDatenAuswahl.Size = new System.Drawing.Size(284, 108);
+            this.lsbDatenAuswahl.Size = new System.Drawing.Size(284, 109);
             this.lsbDatenAuswahl.TabIndex = 2;
+            this.lsbDatenAuswahl.SelectedIndexChanged += new System.EventHandler(this.lsbDatenAuswahl_SelectedIndexChanged);
             // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 411);
+            this.ClientSize = new System.Drawing.Size(984, 412);
             this.Controls.Add(this.mainTabLayout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -318,7 +319,7 @@
         private System.Windows.Forms.Button btnDatenAdd;
         private System.Windows.Forms.MaskedTextBox txbmName;
         private System.Windows.Forms.MaskedTextBox txbmCode;
-        private System.Windows.Forms.ListBox lsbDatenAuswahl;
+        private System.Windows.Forms.CheckedListBox lsbDatenAuswahl;
         private System.Windows.Forms.Label lblDatenName;
     }
 }

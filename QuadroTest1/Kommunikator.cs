@@ -62,6 +62,16 @@ namespace QuadroTest1
             
         }
 
+        public void close()
+        {
+            if (mSerialPort.IsOpen)
+            {
+                mSerialPort.Close();
+            }
+            mSerialPort.Dispose();
+
+        }
+
         private void workReviced(object sender, SerialDataReceivedEventArgs e)
         {
             int toRead = mSerialPort.BytesToRead;
@@ -88,6 +98,9 @@ namespace QuadroTest1
                         {
                             case 118:
                                 remainToRead = 3;
+                            break;
+                            case 119:
+                            remainToRead = 5;
                             break;
                         }
                         readingFirst = false;
@@ -128,14 +141,19 @@ namespace QuadroTest1
                 case 'f':
                     break;
                 case 'v':
-                    byte[] buffer = {(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
-                    int highVal = (byte)ptoAnalyse[2];
-                    if (highVal <= 127)
-                        highVal = highVal * 256 + (byte)ptoAnalyse[3];
-                    else
-                        highVal = (255 - highVal +1) * -256 - (255 - (byte)ptoAnalyse[3]);
-                    highVal = BitConverter.ToInt16(buffer, 0);
-                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highVal });
+                    byte[] bufferV = {(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
+                    short highValV = BitConverter.ToInt16(bufferV, 0);
+                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValV });
+                    if (recData.Count > 500)
+                    {
+                        recData.Dequeue();
+                    }
+                    break;
+                case 'w':
+                    byte[] bufferW = {(byte)ptoAnalyse[5],(byte)ptoAnalyse[4],(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
+                    int highValW = BitConverter.ToInt32(bufferW, 0);
+                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValW
+                    });
                     if (recData.Count > 500)
                     {
                         recData.Dequeue();
@@ -145,6 +163,15 @@ namespace QuadroTest1
                     Debug.WriteLine("Dropped Message Coded with: " + ptoAnalyse);
                     break;
             }
+        }
+
+        public void requestValue(byte code)
+        {
+            directSend("r" + code);
+        }
+        public void stopRequestValue(byte code)
+        {
+            directSend("s" + code);
         }
 
         public int startConnect()
