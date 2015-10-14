@@ -14,9 +14,11 @@ namespace QuadroTest1
 {
     public partial class formMain : Form
     {
-        private Kommunikator mKommu = null;
+        private Kommunikator mKommu = new Kommunikator();
         private Timer zyklTimer = new Timer();
-        private uint tick200ms = 0;  
+        private uint tick200ms = 0;
+        private bool startedConnect = false;
+
         public class DatenAuswahlElement
         {
             public byte code { get; set; }
@@ -54,7 +56,7 @@ namespace QuadroTest1
                 return;
             tick200ms++;
             mKommu.zyklischMain();
-            lblPingCounter.Text = "Pings: " + Convert.ToString(mKommu.cntping);
+            lblPingCounter.Text = "Pings: " + Convert.ToString(mKommu.cntPing);
             lblMessagesRec.Text = "Empfangen: " + Convert.ToString(mKommu.cntRec);
             lblMessagesSent.Text = "Gesendet: " + Convert.ToString(mKommu.cntSend);
             switch (mKommu.mKommunikatorState)
@@ -121,16 +123,17 @@ namespace QuadroTest1
                 Debug.WriteLine("Empty Com or No Baud");
                 return;
             }
-            if(mKommu==null)
+            if (!startedConnect)
             {
-                mKommu = new Kommunikator(comPort, baudRate);
-                
+                mKommu.open(comPort, baudRate);
+                startedConnect = true;
             }
             else
             {
                 mKommu.close();
-                mKommu = new Kommunikator(comPort, baudRate);
-            }    
+                startedConnect = false;
+            }
+                
         }
 
         private void btnDatenAdd_Click(object sender, EventArgs e)
@@ -161,6 +164,7 @@ namespace QuadroTest1
                 lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie },true);
                 txbmCode.Text = (newCode + 1).ToString();
                 chrDaten.Series.Add(newSerie);
+                mKommu.queRequestValue(newCode, true, false);
             }
         }
 
@@ -171,6 +175,7 @@ namespace QuadroTest1
                 DatenAuswahlElement toDelete = (DatenAuswahlElement)lsbDatenAuswahl.SelectedItem;
                 chrDaten.Series.Remove(toDelete.serie);
                 lsbDatenAuswahl.Items.Remove(toDelete);
+                mKommu.queRequestValue(toDelete.code, false, true);
             }
         }
 

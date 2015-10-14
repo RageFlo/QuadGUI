@@ -10,12 +10,14 @@ namespace QuadroTest1
     class Kommunikator
     {
         public class armSetting{public byte code{set;get;} public int value{set;get;}};
+        public class armRequestValue{public byte code{set;get;} public bool started{set;get;} public bool stopped{set;get;}};
         public enum kommunikatorStateTyp { connected, disconnected, connecting, error };
 
         private static int sMaxWaitConfirm = 40;
         private static int sMaxWaitPing = 40;
 
         public kommunikatorStateTyp mKommunikatorState{ get; private set;}
+
         private SerialPort mSerialPort;
         private bool requestConnect;
         private bool requestReset;
@@ -29,7 +31,7 @@ namespace QuadroTest1
         private int waitedForConfirm = 0;
         private int waitedForPing = 0;
         private Queue<byte> toCommand;
-        private Queue<byte> toRequest;
+        private List<armRequestValue> toRequest;
         private Queue<armSetting> toSet;
         public Queue<armSetting> recData;
         private Queue<byte> recError;
@@ -37,14 +39,32 @@ namespace QuadroTest1
 
         public int cntRec = 0;
         public int cntSend = 0;
-        public int cntping = 0;
+        public int cntPing = 0;
 
 
-        public Kommunikator(String pportName, int pbaudRate)
+        public Kommunikator()
+        {
+            resetAll();
+        }
+
+        private void resetAll()
         {
             mKommunikatorState = kommunikatorStateTyp.disconnected;
             allrecData = new Queue<string>();
             recData = new Queue<armSetting>();
+            toRequest = new List<armRequestValue>();
+            cntPing = 0;
+            cntRec = 0;
+            cntSend = 0;
+            waitedForConfirm = 0;
+            waitedForPing = 0;
+            remainToRead = 0;
+            reading = false;
+            readingFirst = false;
+        }
+
+        public void open(String pportName, int pbaudRate)
+        {
             try
             {
                 mSerialPort = new SerialPort(pportName, pbaudRate);
@@ -52,24 +72,27 @@ namespace QuadroTest1
                 mSerialPort.DataReceived += new SerialDataReceivedEventHandler(workReviced);
                 mSerialPort.Encoding = Encoding.ASCII;
                 Debug.WriteLine("Opened Com Port");
-                
+
             }
-            catch {
+            catch
+            {
                 Debug.WriteLine("Failed to Open Port on Kom Konstructor, portname:" + pportName);
                 this.mKommunikatorState = kommunikatorStateTyp.error;
             }
             requestConnect = true;
-            
         }
 
         public void close()
         {
-            if (mSerialPort.IsOpen)
+            if (mSerialPort != null)
             {
-                mSerialPort.Close();
+                if (mSerialPort.IsOpen)
+                {
+                    mSerialPort.Close();
+                }
+                mSerialPort.Dispose();
             }
-            mSerialPort.Dispose();
-
+            resetAll();
         }
 
         private void workReviced(object sender, SerialDataReceivedEventArgs e)
@@ -133,7 +156,7 @@ namespace QuadroTest1
             {
                 case 'a':
                     waitedForPing = 0;
-                    cntping++;
+                    cntPing++;
                     break;
                 case 'c':
                     waitedForConfirm = 0;
@@ -163,6 +186,29 @@ namespace QuadroTest1
                     Debug.WriteLine("Dropped Message Coded with: " + ptoAnalyse);
                     break;
             }
+        }
+
+        public void queRequestValue(byte pcode, bool pstart, bool pstop)
+        {
+            if (pstart == pstop)
+                return;
+            if (!toRequest.Select<armRequestValue,byte>(x => x.code).Contains(pcode))
+            {
+                toRequest.Add(new armRequestValue { code = pcode, started = !pstart, stopped = !pstop});
+            }
+        }
+
+        public void workRequestValueQue()
+        {
+            foreach (byte rcode in toRequest.Where(x => x.started == false).Select<armRequestValue, byte>(x => x.code))
+            {
+                requestValue(rcode);
+            }
+            foreach (byte rcode in toRequest.Where(x => x.stopped == false).Select<armRequestValue, byte>(x => x.code))
+            {
+                stopRequestValue(rcode);
+            }
+            toRequest.ForEach(x => { x.stopped = true; x.started = true; });
         }
 
         public void requestValue(byte code)
