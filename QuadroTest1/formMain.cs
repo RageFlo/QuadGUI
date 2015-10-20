@@ -40,14 +40,16 @@ namespace QuadroTest1
             zyklTimer.Start();
             chrDaten.Series.Clear();
 
-            datenAuswahlAdd(0, "Accel X");
-            datenAuswahlAdd(1, "Accel Y");
-            datenAuswahlAdd(2, "Accel Z");
-            datenAuswahlAdd(3, "Temp");
+            //datenAuswahlAdd(0, "Accel X");
+            //datenAuswahlAdd(1, "Accel Y");
+            //datenAuswahlAdd(2, "Accel Z");
+            //datenAuswahlAdd(3, "Temp");
             datenAuswahlAdd(4, "Gyro X");
             datenAuswahlAdd(5, "Gyro Y");
             datenAuswahlAdd(6, "Gyro Z");
-
+            datenAuswahlAdd(7, "angle X");
+            datenAuswahlAdd(8, "angle y");
+            datenAuswahlAdd(9, "angle z");
         }
 
         void zyklTimer_Tick(object sender, EventArgs e)
@@ -80,10 +82,14 @@ namespace QuadroTest1
             }
 
             //Daten einlesen
-            foreach(DatenAuswahlElement datenEle in lsbDatenAuswahl.CheckedItems.Cast<DatenAuswahlElement>()){
+            foreach (DatenAuswahlElement datenEle in lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>())
+            {
                 datenEle.serie.Points.Clear();
-                foreach (double y in mKommu.recData.Where(x => x.code == datenEle.code).Select<Kommunikator.armSetting, Int32>(x => x.value))
-                    datenEle.serie.Points.AddXY(tick200ms, y);
+                if (lsbDatenAuswahl.CheckedItems.Contains(datenEle))
+                {
+                    foreach (double y in mKommu.recData.Where(x => x.code == datenEle.code).Select<Kommunikator.armSetting, Int32>(x => x.value))
+                        datenEle.serie.Points.AddY(y);
+                }
             }
 
         }
@@ -159,7 +165,9 @@ namespace QuadroTest1
                 Series newSerie = new Series(newName);
                 newSerie.AxisLabel = newName;
                 newSerie.YValueType = ChartValueType.Int32;
-                //serY.IsXValueIndexed = true;
+                //newSerie.XAxisType = AxisType.Primary;
+                //newSerie.XValueType = ChartValueType.Int32;
+                //newSerie.IsXValueIndexed = true;
                 newSerie.ChartType = SeriesChartType.Line;
                 lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie },true);
                 txbmCode.Text = (newCode + 1).ToString();

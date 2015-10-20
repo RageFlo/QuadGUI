@@ -97,6 +97,8 @@ namespace QuadroTest1
 
         private void workReviced(object sender, SerialDataReceivedEventArgs e)
         {
+            if (!mSerialPort.IsOpen)
+                return;
             int toRead = mSerialPort.BytesToRead;
             byte[] buf = new byte[toRead];
             mSerialPort.Read(buf, 0, toRead);
@@ -175,8 +177,7 @@ namespace QuadroTest1
                 case 'w':
                     byte[] bufferW = {(byte)ptoAnalyse[5],(byte)ptoAnalyse[4],(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
                     int highValW = BitConverter.ToInt32(bufferW, 0);
-                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValW
-                    });
+                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValW/100});
                     if (recData.Count > 500)
                     {
                         recData.Dequeue();
@@ -274,6 +275,7 @@ namespace QuadroTest1
                     {
                         analyseRec(allrecData.Dequeue());
                     }
+                    workRequestValueQue();
                     if (waitedForPing > sMaxWaitPing)
                     {
                         mKommunikatorState = kommunikatorStateTyp.disconnected;
