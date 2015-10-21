@@ -80,6 +80,7 @@ namespace QuadroTest1
                 this.mKommunikatorState = kommunikatorStateTyp.error;
             }
             requestConnect = true;
+            stopRequestValue(0); // RESET REQUEST VEKTOR
         }
 
         public void close()
@@ -177,7 +178,7 @@ namespace QuadroTest1
                 case 'w':
                     byte[] bufferW = {(byte)ptoAnalyse[5],(byte)ptoAnalyse[4],(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
                     int highValW = BitConverter.ToInt32(bufferW, 0);
-                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValW/100});
+                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValW});
                     if (recData.Count > 500)
                     {
                         recData.Dequeue();
@@ -214,11 +215,12 @@ namespace QuadroTest1
 
         public void requestValue(byte code)
         {
-            directSend("r" + code);
+            byte[] temp = new byte[]{(byte)(((byte)'0')+code),0};
+            directSend("r" + BitConverter.ToChar(temp,0));
         }
         public void stopRequestValue(byte code)
         {
-            directSend("s" + code);
+            directSend("s" + BitConverter.ToChar(new byte[] { 0, (byte)(((byte)'0') + code) }, 0));
         }
 
         public int startConnect()

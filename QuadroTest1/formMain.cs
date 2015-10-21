@@ -18,15 +18,18 @@ namespace QuadroTest1
         private Timer zyklTimer = new Timer();
         private uint tick200ms = 0;
         private bool startedConnect = false;
+        private bool chrPaused = false;
 
         public class DatenAuswahlElement
         {
+            private double _scale = 1;
             public byte code { get; set; }
             public string name { get; set; }
             public Series serie { get; set; }
+            public double scale { get { return _scale; } set{ _scale = value;} }
             public override string ToString()
             {
-                return code + "  " + name;
+                return String.Format("{0:000}  {1,-15} {2:000}",code,name,scale);
             }
         }
 
@@ -39,17 +42,20 @@ namespace QuadroTest1
             zyklTimer.Tick += new EventHandler(zyklTimer_Tick);
             zyklTimer.Start();
             chrDaten.Series.Clear();
-
+            
             //datenAuswahlAdd(0, "Accel X");
             //datenAuswahlAdd(1, "Accel Y");
             //datenAuswahlAdd(2, "Accel Z");
             //datenAuswahlAdd(3, "Temp");
-            datenAuswahlAdd(4, "Gyro X");
-            datenAuswahlAdd(5, "Gyro Y");
-            datenAuswahlAdd(6, "Gyro Z");
-            datenAuswahlAdd(7, "angle X");
-            datenAuswahlAdd(8, "angle y");
-            datenAuswahlAdd(9, "angle z");
+            //datenAuswahlAdd(4, "Gyro X");
+            //datenAuswahlAdd(5, "Gyro Y");
+            //datenAuswahlAdd(6, "Gyro Z");
+            //datenAuswahlAdd(7, "angle g X");
+            //datenAuswahlAdd(8, "angle g y");
+            //datenAuswahlAdd(9, "angle g z");
+            datenAuswahlAdd(10, "angle a X", 1);
+            datenAuswahlAdd(11, "angle a Y", 1);
+            datenAuswahlAdd(12, "angle a Z", 1);
         }
 
         void zyklTimer_Tick(object sender, EventArgs e)
@@ -82,16 +88,18 @@ namespace QuadroTest1
             }
 
             //Daten einlesen
-            foreach (DatenAuswahlElement datenEle in lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>())
+            if (mKommu.mKommunikatorState == Kommunikator.kommunikatorStateTyp.connected && !chrPaused)
             {
-                datenEle.serie.Points.Clear();
-                if (lsbDatenAuswahl.CheckedItems.Contains(datenEle))
+                foreach (DatenAuswahlElement datenEle in lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>())
                 {
-                    foreach (double y in mKommu.recData.Where(x => x.code == datenEle.code).Select<Kommunikator.armSetting, Int32>(x => x.value))
-                        datenEle.serie.Points.AddY(y);
+                    datenEle.serie.Points.Clear();
+                    if (lsbDatenAuswahl.CheckedItems.Contains(datenEle))
+                    {
+                        foreach (double y in mKommu.recData.Where(x => x.code == datenEle.code).Select<Kommunikator.armSetting, Int32>(x => x.value))
+                            datenEle.serie.Points.AddY(y*datenEle.scale);
+                    }
                 }
             }
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -145,17 +153,19 @@ namespace QuadroTest1
         private void btnDatenAdd_Click(object sender, EventArgs e)
         {
             byte newCode;
+            double newScale;
             try { 
                 newCode = Convert.ToByte(txbmCode.Text);
+                newScale = Convert.ToDouble(txbmScale.Text);
             }
             catch
             {
                 return;
             }
-            datenAuswahlAdd(newCode, txbmName.Text);
+            datenAuswahlAdd(newCode, txbmName.Text, newScale);
         }
 
-        private void datenAuswahlAdd(byte newCode, string newName)
+        private void datenAuswahlAdd(byte newCode, string newName, double newScale)
         {
             bool checkExists;
             checkExists = lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>().Select(x => x.code).Contains(newCode);
@@ -169,7 +179,7 @@ namespace QuadroTest1
                 //newSerie.XValueType = ChartValueType.Int32;
                 //newSerie.IsXValueIndexed = true;
                 newSerie.ChartType = SeriesChartType.Line;
-                lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie },true);
+                lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie, scale = newScale },true);
                 txbmCode.Text = (newCode + 1).ToString();
                 chrDaten.Series.Add(newSerie);
                 mKommu.queRequestValue(newCode, true, false);
@@ -190,6 +200,16 @@ namespace QuadroTest1
         private void lsbDatenAuswahl_SelectedIndexChanged(object sender, EventArgs e)
         {
           
+        }
+
+        private void btnPause_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnRohdaten_Click(object sender, EventArgs e)
+        {
+
         }
 
 
