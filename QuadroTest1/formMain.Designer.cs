@@ -34,6 +34,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
             this.mainTabLayout = new System.Windows.Forms.TableLayoutPanel();
             this.mainPanConInfo = new System.Windows.Forms.Panel();
+            this.btnPause = new System.Windows.Forms.CheckBox();
+            this.btnRohdaten = new System.Windows.Forms.Button();
             this.lblMessagesRec = new System.Windows.Forms.Label();
             this.lblMessagesSent = new System.Windows.Forms.Label();
             this.lblPingCounter = new System.Windows.Forms.Label();
@@ -45,6 +47,8 @@
             this.cmbComPorts = new System.Windows.Forms.ComboBox();
             this.chrDaten = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.pnlDatenAuswahl = new System.Windows.Forms.Panel();
+            this.lblDatenScale = new System.Windows.Forms.Label();
+            this.txbmScale = new System.Windows.Forms.MaskedTextBox();
             this.lblDatenName = new System.Windows.Forms.Label();
             this.lblDatenCode = new System.Windows.Forms.Label();
             this.btnDatenremove = new System.Windows.Forms.Button();
@@ -52,10 +56,7 @@
             this.txbmName = new System.Windows.Forms.MaskedTextBox();
             this.txbmCode = new System.Windows.Forms.MaskedTextBox();
             this.lsbDatenAuswahl = new System.Windows.Forms.CheckedListBox();
-            this.txbmScale = new System.Windows.Forms.MaskedTextBox();
-            this.lblDatenScale = new System.Windows.Forms.Label();
-            this.btnRohdaten = new System.Windows.Forms.Button();
-            this.btnPause = new System.Windows.Forms.Button();
+            this.pnlToSet = new System.Windows.Forms.Panel();
             this.mainTabLayout.SuspendLayout();
             this.mainPanConInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chrDaten)).BeginInit();
@@ -71,6 +72,7 @@
             this.mainTabLayout.Controls.Add(this.mainPanConInfo, 0, 2);
             this.mainTabLayout.Controls.Add(this.chrDaten, 0, 0);
             this.mainTabLayout.Controls.Add(this.pnlDatenAuswahl, 1, 0);
+            this.mainTabLayout.Controls.Add(this.pnlToSet, 1, 1);
             this.mainTabLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTabLayout.Location = new System.Drawing.Point(0, 0);
             this.mainTabLayout.Name = "mainTabLayout";
@@ -78,7 +80,7 @@
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTabLayout.Size = new System.Drawing.Size(984, 412);
+            this.mainTabLayout.Size = new System.Drawing.Size(992, 423);
             this.mainTabLayout.TabIndex = 0;
             // 
             // mainPanConInfo
@@ -97,10 +99,33 @@
             this.mainPanConInfo.Controls.Add(this.lblComPort);
             this.mainPanConInfo.Controls.Add(this.cmbComPorts);
             this.mainPanConInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mainPanConInfo.Location = new System.Drawing.Point(3, 385);
+            this.mainPanConInfo.Location = new System.Drawing.Point(3, 396);
             this.mainPanConInfo.Name = "mainPanConInfo";
-            this.mainPanConInfo.Size = new System.Drawing.Size(978, 24);
+            this.mainPanConInfo.Size = new System.Drawing.Size(986, 24);
             this.mainPanConInfo.TabIndex = 0;
+            // 
+            // btnPause
+            // 
+            this.btnPause.Appearance = System.Windows.Forms.Appearance.Button;
+            this.btnPause.Location = new System.Drawing.Point(528, 0);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(70, 21);
+            this.btnPause.TabIndex = 10;
+            this.btnPause.Text = "Pause";
+            this.btnPause.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnPause.UseVisualStyleBackColor = true;
+            this.btnPause.CheckedChanged += new System.EventHandler(this.btnPause_CheckedChanged);
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            // 
+            // btnRohdaten
+            // 
+            this.btnRohdaten.Location = new System.Drawing.Point(452, 0);
+            this.btnRohdaten.Name = "btnRohdaten";
+            this.btnRohdaten.Size = new System.Drawing.Size(70, 21);
+            this.btnRohdaten.TabIndex = 9;
+            this.btnRohdaten.Text = "Rohdaten";
+            this.btnRohdaten.UseVisualStyleBackColor = true;
+            this.btnRohdaten.Click += new System.EventHandler(this.btnRohdaten_Click);
             // 
             // lblMessagesRec
             // 
@@ -198,7 +223,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chrDaten.Series.Add(series1);
-            this.chrDaten.Size = new System.Drawing.Size(682, 376);
+            this.chrDaten.Size = new System.Drawing.Size(682, 387);
             this.chrDaten.TabIndex = 1;
             this.chrDaten.Text = "Daten";
             // 
@@ -216,8 +241,25 @@
             this.pnlDatenAuswahl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlDatenAuswahl.Location = new System.Drawing.Point(691, 3);
             this.pnlDatenAuswahl.Name = "pnlDatenAuswahl";
-            this.pnlDatenAuswahl.Size = new System.Drawing.Size(290, 155);
+            this.pnlDatenAuswahl.Size = new System.Drawing.Size(298, 155);
             this.pnlDatenAuswahl.TabIndex = 3;
+            // 
+            // lblDatenScale
+            // 
+            this.lblDatenScale.AutoSize = true;
+            this.lblDatenScale.Location = new System.Drawing.Point(105, 114);
+            this.lblDatenScale.Name = "lblDatenScale";
+            this.lblDatenScale.Size = new System.Drawing.Size(34, 13);
+            this.lblDatenScale.TabIndex = 10;
+            this.lblDatenScale.Text = "Scale";
+            // 
+            // txbmScale
+            // 
+            this.txbmScale.Location = new System.Drawing.Point(108, 130);
+            this.txbmScale.Mask = "000";
+            this.txbmScale.Name = "txbmScale";
+            this.txbmScale.Size = new System.Drawing.Size(28, 20);
+            this.txbmScale.TabIndex = 9;
             // 
             // lblDatenName
             // 
@@ -282,49 +324,20 @@
             this.lsbDatenAuswahl.TabIndex = 2;
             this.lsbDatenAuswahl.SelectedIndexChanged += new System.EventHandler(this.lsbDatenAuswahl_SelectedIndexChanged);
             // 
-            // txbmScale
+            // pnlToSet
             // 
-            this.txbmScale.Location = new System.Drawing.Point(108, 130);
-            this.txbmScale.Mask = "000";
-            this.txbmScale.Name = "txbmScale";
-            this.txbmScale.Size = new System.Drawing.Size(28, 20);
-            this.txbmScale.TabIndex = 9;
-            this.txbmScale.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.txbmScale_MaskInputRejected);
-            // 
-            // lblDatenScale
-            // 
-            this.lblDatenScale.AutoSize = true;
-            this.lblDatenScale.Location = new System.Drawing.Point(105, 114);
-            this.lblDatenScale.Name = "lblDatenScale";
-            this.lblDatenScale.Size = new System.Drawing.Size(34, 13);
-            this.lblDatenScale.TabIndex = 10;
-            this.lblDatenScale.Text = "Scale";
-            // 
-            // btnRohdaten
-            // 
-            this.btnRohdaten.Location = new System.Drawing.Point(452, 0);
-            this.btnRohdaten.Name = "btnRohdaten";
-            this.btnRohdaten.Size = new System.Drawing.Size(70, 21);
-            this.btnRohdaten.TabIndex = 9;
-            this.btnRohdaten.Text = "Rohdaten";
-            this.btnRohdaten.UseVisualStyleBackColor = true;
-            this.btnRohdaten.Click += new System.EventHandler(this.btnRohdaten_Click);
-            // 
-            // btnPause
-            // 
-            this.btnPause.Location = new System.Drawing.Point(528, 0);
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(70, 21);
-            this.btnPause.TabIndex = 10;
-            this.btnPause.Text = "Pause";
-            this.btnPause.UseVisualStyleBackColor = true;
-            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            this.pnlToSet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlToSet.Location = new System.Drawing.Point(691, 164);
+            this.pnlToSet.Name = "pnlToSet";
+            this.pnlToSet.Size = new System.Drawing.Size(298, 226);
+            this.pnlToSet.TabIndex = 4;
+
             // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 412);
+            this.ClientSize = new System.Drawing.Size(992, 423);
             this.Controls.Add(this.mainTabLayout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -369,8 +382,9 @@
         private System.Windows.Forms.Label lblDatenName;
         private System.Windows.Forms.Label lblDatenScale;
         private System.Windows.Forms.MaskedTextBox txbmScale;
-        private System.Windows.Forms.Button btnPause;
+        private System.Windows.Forms.CheckBox btnPause;
         private System.Windows.Forms.Button btnRohdaten;
+        private System.Windows.Forms.Panel pnlToSet;
     }
 }
 

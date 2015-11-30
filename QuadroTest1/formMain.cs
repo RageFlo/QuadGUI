@@ -42,6 +42,11 @@ namespace QuadroTest1
             zyklTimer.Tick += new EventHandler(zyklTimer_Tick);
             zyklTimer.Start();
             chrDaten.Series.Clear();
+
+            for (int i = 0; i < 5; i++)
+            {
+                pnlToSet.Controls.Add(new settingsUI(mKommu));
+            }
             
             //datenAuswahlAdd(0, "Accel X");
             //datenAuswahlAdd(1, "Accel Y");
@@ -55,7 +60,10 @@ namespace QuadroTest1
             //datenAuswahlAdd(9, "angle g z");
             datenAuswahlAdd(10, "angle a X", 1);
             datenAuswahlAdd(11, "angle a Y", 1);
-            datenAuswahlAdd(12, "angle a Z", 1);
+            //datenAuswahlAdd(12, "angle a Z", 1);
+            datenAuswahlAdd(13, "angleCpmp X", 0.01);
+            datenAuswahlAdd(14, "angleCpmp Y", 0.01);
+            //datenAuswahlAdd(15, "angleCpmp Z", 0.01);
         }
 
         void zyklTimer_Tick(object sender, EventArgs e)
@@ -209,7 +217,14 @@ namespace QuadroTest1
 
         private void btnRohdaten_Click(object sender, EventArgs e)
         {
+            mKommu.recData.Enqueue(new Kommunikator.armSetting() { code = 1, value = 1 });
+            rohdaten currentroh = new rohdaten(mKommu.recData);
+            currentroh.Show();
+        }
 
+        private void btnPause_CheckedChanged(object sender, EventArgs e)
+        {
+            chrPaused = btnPause.Checked;
         }
 
 

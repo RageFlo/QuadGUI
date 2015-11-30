@@ -2,14 +2,23 @@
 using System.IO.Ports;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 
 namespace QuadroTest1
 {
-    class Kommunikator
+    public class Kommunikator
     {
-        public class armSetting{public byte code{set;get;} public int value{set;get;}};
+        public class armSetting:ICloneable{
+            public byte code { set; get; } public int value { set; get; }
+            public object Clone() { return new armSetting( this ); }
+            public armSetting(armSetting toCopy)
+            {
+                this.code = toCopy.code; this.value = toCopy.value;
+            }
+            public armSetting() { }
+            };
         public class armRequestValue{public byte code{set;get;} public bool started{set;get;} public bool stopped{set;get;}};
         public enum kommunikatorStateTyp { connected, disconnected, connecting, error };
 
@@ -35,7 +44,7 @@ namespace QuadroTest1
         private Queue<armSetting> toSet;
         public Queue<armSetting> recData;
         private Queue<byte> recError;
-        private Queue<string> allrecData;
+        private ConcurrentQueue<string> allrecData;
 
         public int cntRec = 0;
         public int cntSend = 0;
@@ -50,9 +59,10 @@ namespace QuadroTest1
         private void resetAll()
         {
             mKommunikatorState = kommunikatorStateTyp.disconnected;
-            allrecData = new Queue<string>();
+            allrecData = new ConcurrentQueue<string>();
             recData = new Queue<armSetting>();
             toRequest = new List<armRequestValue>();
+            toSet = new Queue<armSetting>();
             cntPing = 0;
             cntRec = 0;
             cntSend = 0;
@@ -136,6 +146,7 @@ namespace QuadroTest1
                     {
                         if (readingString != string.Empty)
                         {
+                            
                             allrecData.Enqueue(readingString);
                         }
                         reading = false;
@@ -200,7 +211,7 @@ namespace QuadroTest1
             }
         }
 
-        public void workRequestValueQue()
+        private void workRequestValueQue()
         {
             foreach (byte rcode in toRequest.Where(x => x.started == false).Select<armRequestValue, byte>(x => x.code))
             {
@@ -213,14 +224,31 @@ namespace QuadroTest1
             toRequest.ForEach(x => { x.stopped = true; x.started = true; });
         }
 
-        public void requestValue(byte code)
+        private void requestValue(byte code)
         {
             byte[] temp = new byte[]{(byte)(((byte)'0')+code),0};
             directSend("r" + BitConverter.ToChar(temp,0));
         }
+        
         public void stopRequestValue(byte code)
         {
             directSend("s" + BitConverter.ToChar(new byte[] { 0, (byte)(((byte)'0') + code) }, 0));
+        }
+
+        public void sendSetting(byte pCode, int pValue)
+        {
+            toSet.Enqueue(new armSetting { code = pCode, value = pValue });
+        }
+
+        private void workToSet()
+        {
+            while (toSet.Count > 0)
+            {
+                armSetting currentToSet = toSet.Dequeue();
+                byte[] temp = new byte[] { (byte)(((byte)'0') + currentToSet.code), 0 };
+                byte[] tempVal = new byte[] { (byte)(currentToSet.value>>8) , (byte)(currentToSet.value) };
+                directSend("x" + BitConverter.ToChar(temp, 0) + BitConverter.ToChar(tempVal, 0));
+            }
         }
 
         public int startConnect()
@@ -235,7 +263,7 @@ namespace QuadroTest1
             }
         }
 
-        public int directSend(String pToSend)
+        private int directSend(String pToSend)
         {
             int errorState = 0;
             if (pToSend == null || pToSend == String.Empty)
@@ -275,9 +303,12 @@ namespace QuadroTest1
                     directSend("a");
                     while (allrecData.Count > 0)
                     {
-                        analyseRec(allrecData.Dequeue());
+                        String toAnalyse;
+                        if (allrecData.TryDequeue(out toAnalyse))
+                            analyseRec(toAnalyse);
                     }
                     workRequestValueQue();
+                    workToSet();
                     if (waitedForPing > sMaxWaitPing)
                     {
                         mKommunikatorState = kommunikatorStateTyp.disconnected;
@@ -288,7 +319,9 @@ namespace QuadroTest1
                     
                     while (allrecData.Count > 0)
                     {
-                        analyseRec(allrecData.Dequeue());
+                        String toAnalyse;
+                        if (allrecData.TryDequeue(out toAnalyse))
+                            analyseRec(toAnalyse);
                     }
                     if (waitedForConfirm > sMaxWaitConfirm)
                     {
