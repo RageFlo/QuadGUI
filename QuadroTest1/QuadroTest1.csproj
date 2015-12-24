@@ -57,6 +57,15 @@
     <Compile Include="Kommunikator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="rohdaten.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="rohdaten.Designer.cs">
+      <DependentUpon>rohdaten.cs</DependentUpon>
+    </Compile>
+    <Compile Include="settingsUI.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="formMain.resx">
       <DependentUpon>formMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -69,6 +78,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="rohdaten.resx">
+      <DependentUpon>rohdaten.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
