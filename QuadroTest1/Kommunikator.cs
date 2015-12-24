@@ -245,9 +245,9 @@ namespace QuadroTest1
             while (toSet.Count > 0)
             {
                 armSetting currentToSet = toSet.Dequeue();
-                byte[] temp = new byte[] { (byte)(((byte)'0') + currentToSet.code), 0 };
-                byte[] tempVal = new byte[] { (byte)(currentToSet.value>>8) , (byte)(currentToSet.value) };
-                directSend("x" + BitConverter.ToChar(temp, 0) + BitConverter.ToChar(tempVal, 0));
+                //byte[] temp = new byte[] { (byte)(((byte)'0') + currentToSet.code), 0 };
+                //byte[] tempVal = new byte[] { (byte)(currentToSet.value>>8) , (byte)(currentToSet.value) };
+                helperBuildCommand('x', currentToSet.code, currentToSet.value, 2);
             }
         }
 
@@ -292,7 +292,54 @@ namespace QuadroTest1
             }
             return errorState;
         }
-        
+
+        private int directSend(byte[] pToSend, int lenght)
+        {
+            int errorState = 0;
+            if (pToSend == null || lenght <= 0)
+            {
+                errorState = 0x02;
+            }
+            else
+            {
+                if (mKommunikatorState != kommunikatorStateTyp.error)
+                {
+                    if (mSerialPort.IsOpen)
+                    {
+                        byte[] buildingArray = new byte[lenght + 2];
+                        buildingArray[0] = 0x02;
+                        for (int i = 1; i < lenght + 1; i++)
+                        {
+                            buildingArray[i] = pToSend[i - 1];
+                        }
+                        buildingArray[lenght + 1] = 0x03;
+                        mSerialPort.Write(buildingArray,0,lenght+2);
+                        cntSend++;
+                    }
+                    else
+                    {
+                        errorState = 0x05;
+                    }
+                }
+                else
+                {
+                    errorState = 0x01;
+                }
+            }
+            return errorState;
+        }
+
+        private int helperBuildCommand(char commandName, byte code, int val, int byteNumber)
+        {
+            byte[] temp = new byte[byteNumber+2];
+            temp[0] = (byte)commandName;
+            temp[1] = (byte)(code + ((byte)'0'));
+            for (int i = 0; i < byteNumber; i++)
+            {
+                temp[-i + 2 + byteNumber-1] = (byte)(val >> (8 * i));
+            }
+            return directSend(temp, byteNumber + 2);
+        }
 
         public void zyklischMain()
         {
@@ -332,6 +379,7 @@ namespace QuadroTest1
                     {
                         mKommunikatorState = kommunikatorStateTyp.connected;
                         Debug.WriteLine("Connected!");
+                        directSend("q");
                     }
                     waitedForConfirm++;
                     break;

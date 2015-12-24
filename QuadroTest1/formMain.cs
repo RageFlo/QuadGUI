@@ -48,22 +48,23 @@ namespace QuadroTest1
                 pnlToSet.Controls.Add(new settingsUI(mKommu));
             }
             
-            //datenAuswahlAdd(0, "Accel X");
-            //datenAuswahlAdd(1, "Accel Y");
+            //datenAuswahlAdd(0, "Accel X",1);
+            //datenAuswahlAdd(1, "Accel Y", 0.1);
             //datenAuswahlAdd(2, "Accel Z");
             //datenAuswahlAdd(3, "Temp");
-            //datenAuswahlAdd(4, "Gyro X");
+            //datenAuswahlAdd(4, "Gyro X",1);
             //datenAuswahlAdd(5, "Gyro Y");
             //datenAuswahlAdd(6, "Gyro Z");
-            //datenAuswahlAdd(7, "angle g X");
+            datenAuswahlAdd(7, "angle g X",0.0001/13.1);
             //datenAuswahlAdd(8, "angle g y");
             //datenAuswahlAdd(9, "angle g z");
-            datenAuswahlAdd(10, "angle a X", 1);
-            datenAuswahlAdd(11, "angle a Y", 1);
+            datenAuswahlAdd(10, "angle a X", 0.1);
+            //datenAuswahlAdd(11, "angle a Y", 1);
             //datenAuswahlAdd(12, "angle a Z", 1);
-            datenAuswahlAdd(13, "angleCpmp X", 0.01);
-            datenAuswahlAdd(14, "angleCpmp Y", 0.01);
+            datenAuswahlAdd(13, "angleCpmp X", 0.01 / 13.1);
+            datenAuswahlAdd(14, "angleCpmp Y", 0.01 / 13.1);
             //datenAuswahlAdd(15, "angleCpmp Z", 0.01);
+            datenAuswahlAdd(17, "pidX", 1);
         }
 
         void zyklTimer_Tick(object sender, EventArgs e)
