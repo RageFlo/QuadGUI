@@ -150,6 +150,10 @@ namespace QuadroTest1
             {
                 mKommu.open(comPort, baudRate);
                 startedConnect = true;
+                foreach (DatenAuswahlElement curToSend in lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>())
+                {
+                    mKommu.queRequestValue(curToSend.code, true, false);
+                }
             }
             else
             {

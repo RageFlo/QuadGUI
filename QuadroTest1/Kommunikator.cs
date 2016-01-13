@@ -22,8 +22,8 @@ namespace QuadroTest1
         public class armRequestValue{public byte code{set;get;} public bool started{set;get;} public bool stopped{set;get;}};
         public enum kommunikatorStateTyp { connected, disconnected, connecting, error };
 
-        private static int sMaxWaitConfirm = 40;
-        private static int sMaxWaitPing = 40;
+        private static int sMaxWaitConfirm = 10;
+        private static int sMaxWaitPing = 15;
 
         public kommunikatorStateTyp mKommunikatorState{ get; private set;}
 
