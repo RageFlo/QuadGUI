@@ -9,16 +9,17 @@ using System.Windows.Forms;
 
 namespace QuadroTest1
 {
-    public partial class rohdaten : Form
+    public partial class Rohdaten : Form
     {
-        private List<Kommunikator.armSetting> recDataCopy;
-        private Queue<Kommunikator.armSetting> recDataPointer;
+        private List<Kommunikator.armRecVal> recDataCopy;
+        private Queue<Kommunikator.armRecVal> recDataPointer;
         private BindingSource bs = new BindingSource();
-        public rohdaten(Queue<Kommunikator.armSetting> precDataCopy)
+        public Rohdaten(Queue<Kommunikator.armRecVal> precDataCopy)
         {
             InitializeComponent();
             recDataPointer = precDataCopy;
-            recDataCopy = new List<Kommunikator.armSetting>(precDataCopy.Select(x => x.Clone()).Cast<Kommunikator.armSetting>());
+            recDataCopy = new List<Kommunikator.armRecVal>(precDataCopy.Select(x => x.Clone()).Cast<Kommunikator.armRecVal>());
+            recDataCopy.Sort();
             bs.DataSource = recDataCopy;
             dgvRecData.DataSource = bs;
         }
@@ -44,7 +45,7 @@ namespace QuadroTest1
 
         private void btnRefresh1_Click(object sender, EventArgs e)
         {
-            recDataCopy = new List<Kommunikator.armSetting>(recDataPointer.Select(x => x.Clone()).Cast<Kommunikator.armSetting>());
+            recDataCopy = new List<Kommunikator.armRecVal>(recDataPointer.Select(x => x.Clone()).Cast<Kommunikator.armRecVal>());
             bs.DataSource = recDataCopy;
             dgvRecData.DataSource = bs;
         }

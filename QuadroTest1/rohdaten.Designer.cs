@@ -1,6 +1,6 @@
 ﻿namespace QuadroTest1
 {
-    partial class rohdaten
+    partial class Rohdaten
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(rohdaten));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Rohdaten));
             this.dgvRecData = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.txbFilter1 = new System.Windows.Forms.TextBox();

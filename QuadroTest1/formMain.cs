@@ -55,10 +55,10 @@ namespace QuadroTest1
             //datenAuswahlAdd(4, "Gyro X",1);
             //datenAuswahlAdd(5, "Gyro Y");
             //datenAuswahlAdd(6, "Gyro Z");
-            datenAuswahlAdd(7, "angle g X",0.0001/13.1);
+            //datenAuswahlAdd(7, "angle g X",0.0001/13.1);
             //datenAuswahlAdd(8, "angle g y");
             //datenAuswahlAdd(9, "angle g z");
-            datenAuswahlAdd(10, "angle a X", 0.1);
+            //datenAuswahlAdd(10, "angle a X", 0.1);
             //datenAuswahlAdd(11, "angle a Y", 1);
             //datenAuswahlAdd(12, "angle a Z", 1);
             datenAuswahlAdd(13, "angleCpmp X", 0.01 / 13.1);
@@ -104,8 +104,8 @@ namespace QuadroTest1
                     datenEle.serie.Points.Clear();
                     if (lsbDatenAuswahl.CheckedItems.Contains(datenEle))
                     {
-                        foreach (double y in mKommu.recData.Where(x => x.code == datenEle.code).Select<Kommunikator.armSetting, Int32>(x => x.value))
-                            datenEle.serie.Points.AddY(y*datenEle.scale);
+                        foreach (Kommunikator.armRecVal y in mKommu.recData.Where(x => x.code == datenEle.code))
+                            datenEle.serie.Points.AddXY(y.time,y.value*datenEle.scale);
                     }
                 }
             }
@@ -222,8 +222,8 @@ namespace QuadroTest1
 
         private void btnRohdaten_Click(object sender, EventArgs e)
         {
-            mKommu.recData.Enqueue(new Kommunikator.armSetting() { code = 1, value = 1 });
-            rohdaten currentroh = new rohdaten(mKommu.recData);
+           // mKommu.recData.Enqueue(new Kommunikator.armRecVal() { code = 1, value = 1, time=100-(int)tick200ms});
+            Rohdaten currentroh = new Rohdaten(mKommu.recData);
             currentroh.Show();
         }
 

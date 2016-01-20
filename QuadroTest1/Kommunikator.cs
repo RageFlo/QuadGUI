@@ -18,7 +18,30 @@ namespace QuadroTest1
                 this.code = toCopy.code; this.value = toCopy.value;
             }
             public armSetting() { }
-            };
+        };
+
+        public class armRecVal : ICloneable, IComparable
+        {
+            public byte code { set; get; }
+            public int value { set; get; }
+            public int time { set; get; }
+            public object Clone() { return new armRecVal(this); }
+            public armRecVal(armRecVal toCopy)
+            {
+                this.code = toCopy.code; this.value = toCopy.value; this.time = toCopy.time;
+            }
+            public armRecVal() { }
+            public int CompareTo(object obj)
+            {
+                if (obj is armRecVal)
+                {
+                    armRecVal temp = (armRecVal)obj;
+                    return time.CompareTo(temp.time);
+                }
+                throw new ArgumentException("object is not a armRecVal");    
+            }
+        };
+
         public class armRequestValue{public byte code{set;get;} public bool started{set;get;} public bool stopped{set;get;}};
         public enum kommunikatorStateTyp { connected, disconnected, connecting, error };
 
@@ -39,13 +62,15 @@ namespace QuadroTest1
         private string readingString = String.Empty;
         private int waitedForConfirm = 0;
         private int waitedForPing = 0;
+        private int currentTime = 0;
+
         private Queue<byte> toCommand;
         private List<armRequestValue> toRequest;
         private Queue<armSetting> toSet;
-        public Queue<armSetting> recData;
         private Queue<byte> recError;
         private ConcurrentQueue<string> allrecData;
 
+        public Queue<armRecVal> recData;
         public int cntRec = 0;
         public int cntSend = 0;
         public int cntPing = 0;
@@ -60,7 +85,7 @@ namespace QuadroTest1
         {
             mKommunikatorState = kommunikatorStateTyp.disconnected;
             allrecData = new ConcurrentQueue<string>();
-            recData = new Queue<armSetting>();
+            recData = new Queue<armRecVal>();
             toRequest = new List<armRequestValue>();
             toSet = new Queue<armSetting>();
             cntPing = 0;
@@ -69,6 +94,7 @@ namespace QuadroTest1
             waitedForConfirm = 0;
             waitedForPing = 0;
             remainToRead = 0;
+            currentTime = 0;
             reading = false;
             readingFirst = false;
         }
@@ -138,6 +164,12 @@ namespace QuadroTest1
                             case 119:
                             remainToRead = 5;
                             break;
+                            case 86:
+                            remainToRead = 5;
+                            break;
+                            case 87:
+                            remainToRead = 7;
+                            break;
                         }
                         readingFirst = false;
                         readingString += (char)(currentChar);
@@ -178,18 +210,40 @@ namespace QuadroTest1
                 case 'f':
                     break;
                 case 'v':
-                    byte[] bufferV = {(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
-                    short highValV = BitConverter.ToInt16(bufferV, 0);
-                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValV });
+                    byte[] bufferv = {(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
+                    short highValv = BitConverter.ToInt16(bufferv, 0);
+                    recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValv, time = currentTime });
                     if (recData.Count > 500)
                     {
                         recData.Dequeue();
                     }
                     break;
                 case 'w':
-                    byte[] bufferW = {(byte)ptoAnalyse[5],(byte)ptoAnalyse[4],(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
+                    byte[] bufferw = {(byte)ptoAnalyse[5],(byte)ptoAnalyse[4],(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
+                    int highValw = BitConverter.ToInt32(bufferw, 0);
+                    recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValw, time = currentTime });
+                    if (recData.Count > 500)
+                    {
+                        recData.Dequeue();
+                    }
+                    break;
+                case 'V':
+                    byte[] bufferV = { (byte)ptoAnalyse[3], (byte)ptoAnalyse[2] };
+                    short highValV = BitConverter.ToInt16(bufferV, 0);
+                    byte[] bufferVtime = { (byte)ptoAnalyse[3], (byte)ptoAnalyse[2] };
+                    short highValVtime = BitConverter.ToInt16(bufferVtime, 0);
+                    recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValV, time = highValVtime });
+                    if (recData.Count > 500)
+                    {
+                        recData.Dequeue();
+                    }
+                    break;
+                case 'W':
+                    byte[] bufferW = { (byte)ptoAnalyse[5], (byte)ptoAnalyse[4], (byte)ptoAnalyse[3], (byte)ptoAnalyse[2] };
                     int highValW = BitConverter.ToInt32(bufferW, 0);
-                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValW});
+                    byte[] bufferWtime = { (byte)ptoAnalyse[7], (byte)ptoAnalyse[6] };
+                    short highValWtime = BitConverter.ToInt16(bufferWtime, 0);
+                    recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValW, time = highValWtime });
                     if (recData.Count > 500)
                     {
                         recData.Dequeue();
