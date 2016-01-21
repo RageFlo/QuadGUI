@@ -80,7 +80,7 @@
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTabLayout.Size = new System.Drawing.Size(992, 423);
+            this.mainTabLayout.Size = new System.Drawing.Size(984, 411);
             this.mainTabLayout.TabIndex = 0;
             // 
             // mainPanConInfo
@@ -99,7 +99,7 @@
             this.mainPanConInfo.Controls.Add(this.lblComPort);
             this.mainPanConInfo.Controls.Add(this.cmbComPorts);
             this.mainPanConInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mainPanConInfo.Location = new System.Drawing.Point(3, 396);
+            this.mainPanConInfo.Location = new System.Drawing.Point(3, 384);
             this.mainPanConInfo.Name = "mainPanConInfo";
             this.mainPanConInfo.Size = new System.Drawing.Size(986, 24);
             this.mainPanConInfo.TabIndex = 0;
@@ -223,7 +223,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chrDaten.Series.Add(series1);
-            this.chrDaten.Size = new System.Drawing.Size(682, 387);
+            this.chrDaten.Size = new System.Drawing.Size(682, 375);
             this.chrDaten.TabIndex = 1;
             this.chrDaten.Text = "Daten";
             // 
@@ -329,15 +329,14 @@
             this.pnlToSet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlToSet.Location = new System.Drawing.Point(691, 164);
             this.pnlToSet.Name = "pnlToSet";
-            this.pnlToSet.Size = new System.Drawing.Size(298, 226);
+            this.pnlToSet.Size = new System.Drawing.Size(298, 214);
             this.pnlToSet.TabIndex = 4;
-
             // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(992, 423);
+            this.ClientSize = new System.Drawing.Size(984, 411);
             this.Controls.Add(this.mainTabLayout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

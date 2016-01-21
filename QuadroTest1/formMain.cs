@@ -186,10 +186,11 @@ namespace QuadroTest1
             if (lsbDatenAuswahl.Items.Count < 8 && !checkExists && newName.Length>0)
             {
                 Series newSerie = new Series(newName);
-                newSerie.AxisLabel = newName;
-                newSerie.YValueType = ChartValueType.Int32;
-                //newSerie.XAxisType = AxisType.Primary;
-                //newSerie.XValueType = ChartValueType.Int32;
+                //newSerie.AxisLabel = newName;
+                newSerie.YValueType = ChartValueType.Double;
+                newSerie.XAxisType = AxisType.Primary;
+                newSerie.XValueType = ChartValueType.Double;
+                
                 //newSerie.IsXValueIndexed = true;
                 newSerie.ChartType = SeriesChartType.Line;
                 lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie, scale = newScale },true);

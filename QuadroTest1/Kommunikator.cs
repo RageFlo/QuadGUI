@@ -213,7 +213,7 @@ namespace QuadroTest1
                     byte[] bufferv = {(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
                     short highValv = BitConverter.ToInt16(bufferv, 0);
                     recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValv, time = currentTime });
-                    if (recData.Count > 500)
+                    if (recData.Count > 5000)
                     {
                         recData.Dequeue();
                     }
@@ -222,7 +222,7 @@ namespace QuadroTest1
                     byte[] bufferw = {(byte)ptoAnalyse[5],(byte)ptoAnalyse[4],(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
                     int highValw = BitConverter.ToInt32(bufferw, 0);
                     recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValw, time = currentTime });
-                    if (recData.Count > 500)
+                    if (recData.Count > 5000)
                     {
                         recData.Dequeue();
                     }
@@ -233,7 +233,7 @@ namespace QuadroTest1
                     byte[] bufferVtime = { (byte)ptoAnalyse[3], (byte)ptoAnalyse[2] };
                     short highValVtime = BitConverter.ToInt16(bufferVtime, 0);
                     recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValV, time = highValVtime });
-                    if (recData.Count > 500)
+                    if (recData.Count > 5000)
                     {
                         recData.Dequeue();
                     }
@@ -244,7 +244,7 @@ namespace QuadroTest1
                     byte[] bufferWtime = { (byte)ptoAnalyse[7], (byte)ptoAnalyse[6] };
                     short highValWtime = BitConverter.ToInt16(bufferWtime, 0);
                     recData.Enqueue(new armRecVal { code = (byte)ptoAnalyse[1], value = highValW, time = highValWtime });
-                    if (recData.Count > 500)
+                    if (recData.Count > 5000)
                     {
                         recData.Dequeue();
                     }
