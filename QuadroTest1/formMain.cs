@@ -29,7 +29,7 @@ namespace QuadroTest1
             public double scale { get { return _scale; } set{ _scale = value;} }
             public override string ToString()
             {
-                return String.Format("{0:000}  {1,-15} {2:000}",code,name,scale);
+                return String.Format("{0:000}  {1,-15} {2:e}",code,name,scale);
             }
         }
 
@@ -109,6 +109,12 @@ namespace QuadroTest1
                             datenEle.serie.Points.AddXY(y.time,y.value*datenEle.scale);
                     }
                 }
+            }
+            if (mKommu.mKommunikatorState == Kommunikator.kommunikatorStateTyp.connected ||
+                mKommu.mKommunikatorState == Kommunikator.kommunikatorStateTyp.connecting)
+            {
+                while (mKommu.allDataForTB.Count > 0)
+                    txtbAllData.Text += mKommu.allDataForTB.Dequeue() + "\n";           
             }
         }
 
