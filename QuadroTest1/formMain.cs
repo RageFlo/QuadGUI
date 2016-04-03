@@ -64,7 +64,7 @@ namespace QuadroTest1
             //datenAuswahlAdd(13, "angleCpmp X", 0.01 / 13.1);
             //datenAuswahlAdd(14, "angleCpmp Y", 0.01 / 13.1);
             //datenAuswahlAdd(15, "angleCpmp Z", 0.01);
-            //datenAuswahlAdd(17, "pidX", 1);
+            datenAuswahlAdd(17, "pidX", 1);
             datenAuswahlAdd(18, "kalmanX", 1 / 1000.0);
         }
 
@@ -114,7 +114,8 @@ namespace QuadroTest1
                 mKommu.mKommunikatorState == Kommunikator.kommunikatorStateTyp.connecting)
             {
                 while (mKommu.allDataForTB.Count > 0)
-                    txtbAllData.Text += mKommu.allDataForTB.Dequeue() + "\n";           
+                    //txtbAllData.Text += mKommu.allDataForTB.Dequeue() + "\n";
+                mKommu.allDataForTB.Dequeue();
             }
         }
 
