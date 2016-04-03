@@ -78,10 +78,10 @@ namespace QuadroTest1
 
         void txbmValue_TextChanged(object sender, EventArgs e)
         {
-            byte tempByte;
-            if (mValOkay = byte.TryParse(txbmValue.Text, out tempByte))
+            short tempShort;
+            if (mValOkay = short.TryParse(txbmValue.Text, out tempShort))
             {
-                mLastValidVal = tempByte;
+                mLastValidVal = tempShort;
                 txbmValue.BackColor = System.Drawing.Color.LightGreen;
             }
             else

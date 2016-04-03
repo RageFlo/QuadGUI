@@ -57,6 +57,7 @@
             this.txbmCode = new System.Windows.Forms.MaskedTextBox();
             this.lsbDatenAuswahl = new System.Windows.Forms.CheckedListBox();
             this.pnlToSet = new System.Windows.Forms.Panel();
+            this.txtbAllData = new System.Windows.Forms.TextBox();
             this.mainTabLayout.SuspendLayout();
             this.mainPanConInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chrDaten)).BeginInit();
@@ -70,9 +71,10 @@
             this.mainTabLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTabLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.mainTabLayout.Controls.Add(this.mainPanConInfo, 0, 2);
-            this.mainTabLayout.Controls.Add(this.chrDaten, 0, 0);
+            this.mainTabLayout.Controls.Add(this.chrDaten, 0, 1);
             this.mainTabLayout.Controls.Add(this.pnlDatenAuswahl, 1, 0);
             this.mainTabLayout.Controls.Add(this.pnlToSet, 1, 1);
+            this.mainTabLayout.Controls.Add(this.txtbAllData, 0, 0);
             this.mainTabLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTabLayout.Location = new System.Drawing.Point(0, 0);
             this.mainTabLayout.Name = "mainTabLayout";
@@ -80,7 +82,7 @@
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTabLayout.Size = new System.Drawing.Size(992, 423);
+            this.mainTabLayout.Size = new System.Drawing.Size(984, 612);
             this.mainTabLayout.TabIndex = 0;
             // 
             // mainPanConInfo
@@ -99,7 +101,7 @@
             this.mainPanConInfo.Controls.Add(this.lblComPort);
             this.mainPanConInfo.Controls.Add(this.cmbComPorts);
             this.mainPanConInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mainPanConInfo.Location = new System.Drawing.Point(3, 396);
+            this.mainPanConInfo.Location = new System.Drawing.Point(3, 585);
             this.mainPanConInfo.Name = "mainPanConInfo";
             this.mainPanConInfo.Size = new System.Drawing.Size(986, 24);
             this.mainPanConInfo.TabIndex = 0;
@@ -216,14 +218,13 @@
             this.chrDaten.Dock = System.Windows.Forms.DockStyle.Fill;
             legend1.Name = "Legend1";
             this.chrDaten.Legends.Add(legend1);
-            this.chrDaten.Location = new System.Drawing.Point(3, 3);
+            this.chrDaten.Location = new System.Drawing.Point(3, 164);
             this.chrDaten.Name = "chrDaten";
-            this.mainTabLayout.SetRowSpan(this.chrDaten, 2);
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chrDaten.Series.Add(series1);
-            this.chrDaten.Size = new System.Drawing.Size(682, 387);
+            this.chrDaten.Size = new System.Drawing.Size(682, 415);
             this.chrDaten.TabIndex = 1;
             this.chrDaten.Text = "Daten";
             // 
@@ -329,25 +330,35 @@
             this.pnlToSet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlToSet.Location = new System.Drawing.Point(691, 164);
             this.pnlToSet.Name = "pnlToSet";
-            this.pnlToSet.Size = new System.Drawing.Size(298, 226);
+            this.pnlToSet.Size = new System.Drawing.Size(298, 415);
             this.pnlToSet.TabIndex = 4;
-
+            // 
+            // txtbAllData
+            // 
+            this.txtbAllData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtbAllData.Location = new System.Drawing.Point(3, 3);
+            this.txtbAllData.MaxLength = 1000;
+            this.txtbAllData.Multiline = true;
+            this.txtbAllData.Name = "txtbAllData";
+            this.txtbAllData.Size = new System.Drawing.Size(682, 155);
+            this.txtbAllData.TabIndex = 5;
             // 
             // formMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(992, 423);
+            this.ClientSize = new System.Drawing.Size(984, 612);
             this.Controls.Add(this.mainTabLayout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 450);
-            this.MinimumSize = new System.Drawing.Size(1000, 450);
+            this.MaximumSize = new System.Drawing.Size(1000, 650);
+            this.MinimumSize = new System.Drawing.Size(1000, 650);
             this.Name = "formMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Quadro Steuerung und Info";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.mainTabLayout.ResumeLayout(false);
+            this.mainTabLayout.PerformLayout();
             this.mainPanConInfo.ResumeLayout(false);
             this.mainPanConInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chrDaten)).EndInit();
@@ -385,6 +396,7 @@
         private System.Windows.Forms.CheckBox btnPause;
         private System.Windows.Forms.Button btnRohdaten;
         private System.Windows.Forms.Panel pnlToSet;
+        private System.Windows.Forms.TextBox txtbAllData;
     }
 }
 

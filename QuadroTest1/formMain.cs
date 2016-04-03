@@ -29,7 +29,7 @@ namespace QuadroTest1
             public double scale { get { return _scale; } set{ _scale = value;} }
             public override string ToString()
             {
-                return String.Format("{0:000}  {1,-15} {2:000}",code,name,scale);
+                return String.Format("{0:000}  {1,-15} {2:e}",code,name,scale);
             }
         }
 
@@ -52,7 +52,7 @@ namespace QuadroTest1
             //datenAuswahlAdd(1, "Accel Y", 0.1);
             //datenAuswahlAdd(2, "Accel Z");
             //datenAuswahlAdd(3, "Temp");
-            //datenAuswahlAdd(4, "Gyro X",1);
+            //datenAuswahlAdd(4, "Gyro X", 0.1 / 13.1);
             //datenAuswahlAdd(5, "Gyro Y");
             //datenAuswahlAdd(6, "Gyro Z");
             datenAuswahlAdd(7, "angle g X",0.0001/13.1);
@@ -61,10 +61,11 @@ namespace QuadroTest1
             datenAuswahlAdd(10, "angle a X", 0.1);
             //datenAuswahlAdd(11, "angle a Y", 1);
             //datenAuswahlAdd(12, "angle a Z", 1);
-            datenAuswahlAdd(13, "angleCpmp X", 0.01 / 13.1);
-            datenAuswahlAdd(14, "angleCpmp Y", 0.01 / 13.1);
+            //datenAuswahlAdd(13, "angleCpmp X", 0.01 / 13.1);
+            //datenAuswahlAdd(14, "angleCpmp Y", 0.01 / 13.1);
             //datenAuswahlAdd(15, "angleCpmp Z", 0.01);
-            datenAuswahlAdd(17, "pidX", 1);
+            //datenAuswahlAdd(17, "pidX", 1);
+            datenAuswahlAdd(18, "kalmanX", 1 / 1000.0);
         }
 
         void zyklTimer_Tick(object sender, EventArgs e)
@@ -104,10 +105,16 @@ namespace QuadroTest1
                     datenEle.serie.Points.Clear();
                     if (lsbDatenAuswahl.CheckedItems.Contains(datenEle))
                     {
-                        foreach (double y in mKommu.recData.Where(x => x.code == datenEle.code).Select<Kommunikator.armSetting, Int32>(x => x.value))
-                            datenEle.serie.Points.AddY(y*datenEle.scale);
+                        foreach (Kommunikator.armRecVal y in mKommu.recData.Where(x => x.code == datenEle.code))
+                            datenEle.serie.Points.AddXY(y.time,y.value*datenEle.scale);
                     }
                 }
+            }
+            if (mKommu.mKommunikatorState == Kommunikator.kommunikatorStateTyp.connected ||
+                mKommu.mKommunikatorState == Kommunikator.kommunikatorStateTyp.connecting)
+            {
+                while (mKommu.allDataForTB.Count > 0)
+                    txtbAllData.Text += mKommu.allDataForTB.Dequeue() + "\n";           
             }
         }
 
@@ -150,6 +157,10 @@ namespace QuadroTest1
             {
                 mKommu.open(comPort, baudRate);
                 startedConnect = true;
+                foreach (DatenAuswahlElement curToSend in lsbDatenAuswahl.Items.Cast<DatenAuswahlElement>())
+                {
+                    mKommu.queRequestValue(curToSend.code, true, false);
+                }
             }
             else
             {
@@ -182,10 +193,11 @@ namespace QuadroTest1
             if (lsbDatenAuswahl.Items.Count < 8 && !checkExists && newName.Length>0)
             {
                 Series newSerie = new Series(newName);
-                newSerie.AxisLabel = newName;
-                newSerie.YValueType = ChartValueType.Int32;
-                //newSerie.XAxisType = AxisType.Primary;
-                //newSerie.XValueType = ChartValueType.Int32;
+                //newSerie.AxisLabel = newName;
+                newSerie.YValueType = ChartValueType.Double;
+                newSerie.XAxisType = AxisType.Primary;
+                newSerie.XValueType = ChartValueType.Double;
+                
                 //newSerie.IsXValueIndexed = true;
                 newSerie.ChartType = SeriesChartType.Line;
                 lsbDatenAuswahl.Items.Add(new DatenAuswahlElement { code = newCode, name = newName, serie = newSerie, scale = newScale },true);
@@ -218,8 +230,8 @@ namespace QuadroTest1
 
         private void btnRohdaten_Click(object sender, EventArgs e)
         {
-            mKommu.recData.Enqueue(new Kommunikator.armSetting() { code = 1, value = 1 });
-            rohdaten currentroh = new rohdaten(mKommu.recData);
+           // mKommu.recData.Enqueue(new Kommunikator.armRecVal() { code = 1, value = 1, time=100-(int)tick200ms});
+            Rohdaten currentroh = new Rohdaten(mKommu.recData);
             currentroh.Show();
         }
 

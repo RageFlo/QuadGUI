@@ -18,12 +18,37 @@ namespace QuadroTest1
                 this.code = toCopy.code; this.value = toCopy.value;
             }
             public armSetting() { }
-            };
+        };
+
+        public class armRecVal : ICloneable, IComparable
+        {
+            public byte code { set; get; }
+            public int value { set; get; }
+            public int time { set; get; }
+            public object Clone() { return new armRecVal(this); }
+            public armRecVal(armRecVal toCopy)
+            {
+                this.code = toCopy.code; this.value = toCopy.value; this.time = toCopy.time;
+            }
+            public armRecVal() { }
+            public int CompareTo(object obj)
+            {
+                if (obj is armRecVal)
+                {
+                    armRecVal temp = (armRecVal)obj;
+                    return time.CompareTo(temp.time);
+                }
+                throw new ArgumentException("object is not a armRecVal");    
+            }
+        };
+
         public class armRequestValue{public byte code{set;get;} public bool started{set;get;} public bool stopped{set;get;}};
         public enum kommunikatorStateTyp { connected, disconnected, connecting, error };
 
-        private static int sMaxWaitConfirm = 40;
-        private static int sMaxWaitPing = 40;
+        private static int sMaxWaitConfirm = 10;
+        private static int sMaxWaitPing = 15;
+        private static int sMaxNumberOfPointsChart = 300;
+        private static int sMaxReadingBytes = 15;
 
         public kommunikatorStateTyp mKommunikatorState{ get; private set;}
 
@@ -35,17 +60,22 @@ namespace QuadroTest1
         private bool reading = false;
         private bool readingFirst = false;
         private int remainToRead = 0;
+        private int readingCurrentRead = 0;
         
-        private string readingString = String.Empty;
+        private byte[] readByteArray = new byte[sMaxReadingBytes];
         private int waitedForConfirm = 0;
         private int waitedForPing = 0;
+        private int currentTime = 0;
+
         private Queue<byte> toCommand;
         private List<armRequestValue> toRequest;
         private Queue<armSetting> toSet;
-        public Queue<armSetting> recData;
         private Queue<byte> recError;
-        private ConcurrentQueue<string> allrecData;
+        private ConcurrentQueue<byte[]> allrecData;
 
+
+        public Queue<byte[]> allDataForTB;
+        public Queue<armRecVal> recData;
         public int cntRec = 0;
         public int cntSend = 0;
         public int cntPing = 0;
@@ -59,8 +89,9 @@ namespace QuadroTest1
         private void resetAll()
         {
             mKommunikatorState = kommunikatorStateTyp.disconnected;
-            allrecData = new ConcurrentQueue<string>();
-            recData = new Queue<armSetting>();
+            allrecData = new ConcurrentQueue<byte[]>();
+            allDataForTB = new Queue<byte[]>();
+            recData = new Queue<armRecVal>();
             toRequest = new List<armRequestValue>();
             toSet = new Queue<armSetting>();
             cntPing = 0;
@@ -69,8 +100,10 @@ namespace QuadroTest1
             waitedForConfirm = 0;
             waitedForPing = 0;
             remainToRead = 0;
+            currentTime = 0;
             reading = false;
             readingFirst = false;
+            readingCurrentRead = 0;
         }
 
         public void open(String pportName, int pbaudRate)
@@ -120,9 +153,10 @@ namespace QuadroTest1
                 {
                     if (currentChar == 0x02)
                     {
-                        readingString = string.Empty;
+                        readByteArray = new byte[sMaxReadingBytes];
                         reading = true;
                         readingFirst = true;
+                        readingCurrentRead = 0;
                     }
                 }
                 else
@@ -133,64 +167,105 @@ namespace QuadroTest1
                         switch (currentChar)
                         {
                             case 118:
-                                remainToRead = 3;
+                            remainToRead = 3;
                             break;
                             case 119:
                             remainToRead = 5;
                             break;
+                            case 86:
+                            remainToRead = 5;
+                            break;
+                            case 87:
+                            remainToRead = 7;
+                            break;
                         }
                         readingFirst = false;
-                        readingString += (char)(currentChar);
+                        if (readingCurrentRead < sMaxReadingBytes)
+                        {
+                            readByteArray[readingCurrentRead++] = currentChar;
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Read too much bytes");
+                        }
                     }
                     else if (currentChar == 0x03 && remainToRead <= 0)
                     {
-                        if (readingString != string.Empty)
+                        if (readingCurrentRead>0)
                         {
-                            
-                            allrecData.Enqueue(readingString);
+                            allrecData.Enqueue(readByteArray);
                         }
                         reading = false;
                     }
                     else
                     {
-                        readingString += (char)(currentChar);
+                        if (readingCurrentRead < sMaxReadingBytes)
+                        {
+                            readByteArray[readingCurrentRead++] = currentChar;
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Read too much bytes");
+                        }
                         remainToRead--;
                     }
                 }
             }
         }
 
-        private void analyseRec(string ptoAnalyse)
+        private void analyseRec(byte[] ptoAnalyse)
         {
-            if(ptoAnalyse==null || ptoAnalyse==string.Empty)
+            if(ptoAnalyse==null || ptoAnalyse.Length == 0)
                 return;
-            char command = ptoAnalyse[0];
+            byte command = ptoAnalyse[0];
             cntRec++;
             switch (command)
             {
-                case 'a':
+                case 97:  //a
                     waitedForPing = 0;
                     cntPing++;
                     break;
-                case 'c':
+                case 99:  //c
                     waitedForConfirm = 0;
                     break;
-                case 'f':
+                case 102: //f
                     break;
-                case 'v':
-                    byte[] bufferV = {(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
-                    short highValV = BitConverter.ToInt16(bufferV, 0);
-                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValV });
-                    if (recData.Count > 500)
+                case 118: //v
+                    byte[] bufferv = {ptoAnalyse[3],ptoAnalyse[2]};
+                    short highValv = BitConverter.ToInt16(bufferv, 0);
+                    recData.Enqueue(new armRecVal { code = ptoAnalyse[1], value = highValv, time = currentTime });
+                    if (recData.Count > sMaxNumberOfPointsChart)
                     {
                         recData.Dequeue();
                     }
                     break;
-                case 'w':
-                    byte[] bufferW = {(byte)ptoAnalyse[5],(byte)ptoAnalyse[4],(byte)ptoAnalyse[3],(byte)ptoAnalyse[2]};
+                case 119: //w
+                    byte[] bufferw = {ptoAnalyse[5],ptoAnalyse[4],ptoAnalyse[3],ptoAnalyse[2]};
+                    int highValw = BitConverter.ToInt32(bufferw, 0);
+                    recData.Enqueue(new armRecVal { code = ptoAnalyse[1], value = highValw, time = currentTime });
+                    if (recData.Count > sMaxNumberOfPointsChart)
+                    {
+                        recData.Dequeue();
+                    }
+                    break;
+                case 86://V
+                    byte[] bufferV = { ptoAnalyse[3], ptoAnalyse[2] };
+                    short highValV = BitConverter.ToInt16(bufferV, 0);
+                    byte[] bufferVtime = { ptoAnalyse[5], ptoAnalyse[4] };
+                    short highValVtime = BitConverter.ToInt16(bufferVtime, 0);
+                    recData.Enqueue(new armRecVal { code = ptoAnalyse[1], value = highValV, time = highValVtime });
+                    if (recData.Count > sMaxNumberOfPointsChart)
+                    {
+                        recData.Dequeue();
+                    }
+                    break;
+                case 87://W
+                    byte[] bufferW = { ptoAnalyse[5], ptoAnalyse[4], ptoAnalyse[3], ptoAnalyse[2] };
                     int highValW = BitConverter.ToInt32(bufferW, 0);
-                    recData.Enqueue(new armSetting { code = (byte)ptoAnalyse[1], value = highValW});
-                    if (recData.Count > 500)
+                    byte[] bufferWtime = { ptoAnalyse[7], ptoAnalyse[6] };
+                    short highValWtime = BitConverter.ToInt16(bufferWtime, 0);
+                    recData.Enqueue(new armRecVal { code = ptoAnalyse[1], value = highValW, time = highValWtime });
+                    if (recData.Count > sMaxNumberOfPointsChart)
                     {
                         recData.Dequeue();
                     }
@@ -350,9 +425,12 @@ namespace QuadroTest1
                     directSend("a");
                     while (allrecData.Count > 0)
                     {
-                        String toAnalyse;
+                        byte[] toAnalyse;
                         if (allrecData.TryDequeue(out toAnalyse))
+                        {
+                            allDataForTB.Enqueue(toAnalyse);
                             analyseRec(toAnalyse);
+                        }
                     }
                     workRequestValueQue();
                     workToSet();
@@ -366,14 +444,17 @@ namespace QuadroTest1
                     
                     while (allrecData.Count > 0)
                     {
-                        String toAnalyse;
+                        byte[] toAnalyse;
                         if (allrecData.TryDequeue(out toAnalyse))
+                        {
+                            allDataForTB.Enqueue(toAnalyse);
                             analyseRec(toAnalyse);
+                        }
                     }
                     if (waitedForConfirm > sMaxWaitConfirm)
                     {
-                        mKommunikatorState = kommunikatorStateTyp.disconnected;
-                        Debug.WriteLine("Didnt connect because didnt get confirm");
+                        //mKommunikatorState = kommunikatorStateTyp.disconnected;
+                        //Debug.WriteLine("Didnt connect because didnt get confirm");
                     }
                     else if (waitedForConfirm == 0)
                     {
