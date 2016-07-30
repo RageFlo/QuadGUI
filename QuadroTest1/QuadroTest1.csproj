@@ -63,6 +63,7 @@
     <Compile Include="rohdaten.Designer.cs">
       <DependentUpon>rohdaten.cs</DependentUpon>
     </Compile>
+    <Compile Include="SaveExcel.cs" />
     <Compile Include="settingsUI.cs">
       <SubType>Component</SubType>
     </Compile>

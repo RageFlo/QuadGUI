@@ -34,6 +34,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
             this.mainTabLayout = new System.Windows.Forms.TableLayoutPanel();
             this.mainPanConInfo = new System.Windows.Forms.Panel();
+            this.btnSave = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.CheckBox();
             this.btnRohdaten = new System.Windows.Forms.Button();
             this.lblMessagesRec = new System.Windows.Forms.Label();
@@ -47,8 +48,10 @@
             this.cmbComPorts = new System.Windows.Forms.ComboBox();
             this.chrDaten = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.pnlDatenAuswahl = new System.Windows.Forms.Panel();
+            this.txbmScale3 = new System.Windows.Forms.MaskedTextBox();
+            this.txbmScale2 = new System.Windows.Forms.MaskedTextBox();
             this.lblDatenScale = new System.Windows.Forms.Label();
-            this.txbmScale = new System.Windows.Forms.MaskedTextBox();
+            this.txbmScale1 = new System.Windows.Forms.MaskedTextBox();
             this.lblDatenName = new System.Windows.Forms.Label();
             this.lblDatenCode = new System.Windows.Forms.Label();
             this.btnDatenremove = new System.Windows.Forms.Button();
@@ -82,13 +85,14 @@
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.mainTabLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.mainTabLayout.Size = new System.Drawing.Size(984, 612);
+            this.mainTabLayout.Size = new System.Drawing.Size(984, 611);
             this.mainTabLayout.TabIndex = 0;
             // 
             // mainPanConInfo
             // 
             this.mainPanConInfo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.mainTabLayout.SetColumnSpan(this.mainPanConInfo, 2);
+            this.mainPanConInfo.Controls.Add(this.btnSave);
             this.mainPanConInfo.Controls.Add(this.btnPause);
             this.mainPanConInfo.Controls.Add(this.btnRohdaten);
             this.mainPanConInfo.Controls.Add(this.lblMessagesRec);
@@ -101,10 +105,20 @@
             this.mainPanConInfo.Controls.Add(this.lblComPort);
             this.mainPanConInfo.Controls.Add(this.cmbComPorts);
             this.mainPanConInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.mainPanConInfo.Location = new System.Drawing.Point(3, 585);
+            this.mainPanConInfo.Location = new System.Drawing.Point(3, 584);
             this.mainPanConInfo.Name = "mainPanConInfo";
             this.mainPanConInfo.Size = new System.Drawing.Size(986, 24);
             this.mainPanConInfo.TabIndex = 0;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(604, 0);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(70, 21);
+            this.btnSave.TabIndex = 11;
+            this.btnSave.Text = "Speichern";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnPause
             // 
@@ -224,14 +238,16 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chrDaten.Series.Add(series1);
-            this.chrDaten.Size = new System.Drawing.Size(682, 415);
+            this.chrDaten.Size = new System.Drawing.Size(682, 414);
             this.chrDaten.TabIndex = 1;
             this.chrDaten.Text = "Daten";
             // 
             // pnlDatenAuswahl
             // 
+            this.pnlDatenAuswahl.Controls.Add(this.txbmScale3);
+            this.pnlDatenAuswahl.Controls.Add(this.txbmScale2);
             this.pnlDatenAuswahl.Controls.Add(this.lblDatenScale);
-            this.pnlDatenAuswahl.Controls.Add(this.txbmScale);
+            this.pnlDatenAuswahl.Controls.Add(this.txbmScale1);
             this.pnlDatenAuswahl.Controls.Add(this.lblDatenName);
             this.pnlDatenAuswahl.Controls.Add(this.lblDatenCode);
             this.pnlDatenAuswahl.Controls.Add(this.btnDatenremove);
@@ -245,22 +261,38 @@
             this.pnlDatenAuswahl.Size = new System.Drawing.Size(298, 155);
             this.pnlDatenAuswahl.TabIndex = 3;
             // 
+            // txbmScale3
+            // 
+            this.txbmScale3.Location = new System.Drawing.Point(172, 130);
+            this.txbmScale3.Name = "txbmScale3";
+            this.txbmScale3.Size = new System.Drawing.Size(28, 20);
+            this.txbmScale3.TabIndex = 7;
+            this.txbmScale3.Text = "0";
+            // 
+            // txbmScale2
+            // 
+            this.txbmScale2.Location = new System.Drawing.Point(138, 130);
+            this.txbmScale2.Name = "txbmScale2";
+            this.txbmScale2.Size = new System.Drawing.Size(28, 20);
+            this.txbmScale2.TabIndex = 6;
+            this.txbmScale2.Text = "1";
+            // 
             // lblDatenScale
             // 
             this.lblDatenScale.AutoSize = true;
             this.lblDatenScale.Location = new System.Drawing.Point(105, 114);
             this.lblDatenScale.Name = "lblDatenScale";
-            this.lblDatenScale.Size = new System.Drawing.Size(34, 13);
+            this.lblDatenScale.Size = new System.Drawing.Size(129, 13);
             this.lblDatenScale.TabIndex = 10;
-            this.lblDatenScale.Text = "Scale";
+            this.lblDatenScale.Text = "Scale1 / Scale2 e Scale3";
             // 
-            // txbmScale
+            // txbmScale1
             // 
-            this.txbmScale.Location = new System.Drawing.Point(108, 130);
-            this.txbmScale.Mask = "000";
-            this.txbmScale.Name = "txbmScale";
-            this.txbmScale.Size = new System.Drawing.Size(28, 20);
-            this.txbmScale.TabIndex = 9;
+            this.txbmScale1.Location = new System.Drawing.Point(108, 130);
+            this.txbmScale1.Name = "txbmScale1";
+            this.txbmScale1.Size = new System.Drawing.Size(28, 20);
+            this.txbmScale1.TabIndex = 5;
+            this.txbmScale1.Text = "1";
             // 
             // lblDatenName
             // 
@@ -282,20 +314,21 @@
             // 
             // btnDatenremove
             // 
-            this.btnDatenremove.Location = new System.Drawing.Point(220, 127);
+            this.btnDatenremove.Location = new System.Drawing.Point(248, 127);
             this.btnDatenremove.Name = "btnDatenremove";
-            this.btnDatenremove.Size = new System.Drawing.Size(67, 23);
-            this.btnDatenremove.TabIndex = 6;
+            this.btnDatenremove.Size = new System.Drawing.Size(39, 23);
+            this.btnDatenremove.TabIndex = 9;
+            this.btnDatenremove.TabStop = false;
             this.btnDatenremove.Text = "Entfernen";
             this.btnDatenremove.UseVisualStyleBackColor = true;
             this.btnDatenremove.Click += new System.EventHandler(this.btnDatenremove_Click);
             // 
             // btnDatenAdd
             // 
-            this.btnDatenAdd.Location = new System.Drawing.Point(143, 127);
+            this.btnDatenAdd.Location = new System.Drawing.Point(203, 127);
             this.btnDatenAdd.Name = "btnDatenAdd";
-            this.btnDatenAdd.Size = new System.Drawing.Size(71, 23);
-            this.btnDatenAdd.TabIndex = 5;
+            this.btnDatenAdd.Size = new System.Drawing.Size(45, 23);
+            this.btnDatenAdd.TabIndex = 8;
             this.btnDatenAdd.Text = "Hinzufügen";
             this.btnDatenAdd.UseVisualStyleBackColor = true;
             this.btnDatenAdd.Click += new System.EventHandler(this.btnDatenAdd_Click);
@@ -303,7 +336,6 @@
             // txbmName
             // 
             this.txbmName.Location = new System.Drawing.Point(39, 130);
-            this.txbmName.Mask = "aaaaaaaaa";
             this.txbmName.Name = "txbmName";
             this.txbmName.Size = new System.Drawing.Size(63, 20);
             this.txbmName.TabIndex = 4;
@@ -330,7 +362,7 @@
             this.pnlToSet.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlToSet.Location = new System.Drawing.Point(691, 164);
             this.pnlToSet.Name = "pnlToSet";
-            this.pnlToSet.Size = new System.Drawing.Size(298, 415);
+            this.pnlToSet.Size = new System.Drawing.Size(298, 414);
             this.pnlToSet.TabIndex = 4;
             // 
             // txtbAllData
@@ -340,6 +372,8 @@
             this.txtbAllData.MaxLength = 1000;
             this.txtbAllData.Multiline = true;
             this.txtbAllData.Name = "txtbAllData";
+            this.txtbAllData.ReadOnly = true;
+            this.txtbAllData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtbAllData.Size = new System.Drawing.Size(682, 155);
             this.txtbAllData.TabIndex = 5;
             // 
@@ -347,7 +381,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 612);
+            this.ClientSize = new System.Drawing.Size(984, 611);
             this.Controls.Add(this.mainTabLayout);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -392,11 +426,14 @@
         private System.Windows.Forms.CheckedListBox lsbDatenAuswahl;
         private System.Windows.Forms.Label lblDatenName;
         private System.Windows.Forms.Label lblDatenScale;
-        private System.Windows.Forms.MaskedTextBox txbmScale;
+        private System.Windows.Forms.MaskedTextBox txbmScale1;
         private System.Windows.Forms.CheckBox btnPause;
         private System.Windows.Forms.Button btnRohdaten;
         private System.Windows.Forms.Panel pnlToSet;
         private System.Windows.Forms.TextBox txtbAllData;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.MaskedTextBox txbmScale3;
+        private System.Windows.Forms.MaskedTextBox txbmScale2;
     }
 }
 
