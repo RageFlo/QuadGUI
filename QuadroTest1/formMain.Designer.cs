@@ -61,10 +61,13 @@
             this.lsbDatenAuswahl = new System.Windows.Forms.CheckedListBox();
             this.pnlToSet = new System.Windows.Forms.Panel();
             this.txtbAllData = new System.Windows.Forms.TextBox();
+            this.txbLoadScript = new System.Windows.Forms.TextBox();
+            this.btnloadScript = new System.Windows.Forms.Button();
             this.mainTabLayout.SuspendLayout();
             this.mainPanConInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chrDaten)).BeginInit();
             this.pnlDatenAuswahl.SuspendLayout();
+            this.pnlToSet.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTabLayout
@@ -359,10 +362,11 @@
             // 
             // pnlToSet
             // 
-            this.pnlToSet.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlToSet.Controls.Add(this.btnloadScript);
+            this.pnlToSet.Controls.Add(this.txbLoadScript);
             this.pnlToSet.Location = new System.Drawing.Point(691, 164);
             this.pnlToSet.Name = "pnlToSet";
-            this.pnlToSet.Size = new System.Drawing.Size(298, 414);
+            this.pnlToSet.Size = new System.Drawing.Size(287, 414);
             this.pnlToSet.TabIndex = 4;
             // 
             // txtbAllData
@@ -376,6 +380,28 @@
             this.txtbAllData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtbAllData.Size = new System.Drawing.Size(682, 155);
             this.txtbAllData.TabIndex = 5;
+            // 
+            // txbLoadScript
+            // 
+            this.txbLoadScript.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.txbLoadScript.Location = new System.Drawing.Point(0, 127);
+            this.txbLoadScript.MaxLength = 1000;
+            this.txbLoadScript.Multiline = true;
+            this.txbLoadScript.Name = "txbLoadScript";
+            this.txbLoadScript.ReadOnly = true;
+            this.txbLoadScript.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txbLoadScript.Size = new System.Drawing.Size(287, 287);
+            this.txbLoadScript.TabIndex = 6;
+            // 
+            // btnloadScript
+            // 
+            this.btnloadScript.Location = new System.Drawing.Point(6, 98);
+            this.btnloadScript.Name = "btnloadScript";
+            this.btnloadScript.Size = new System.Drawing.Size(98, 23);
+            this.btnloadScript.TabIndex = 7;
+            this.btnloadScript.Text = "Lade Skript";
+            this.btnloadScript.UseVisualStyleBackColor = true;
+            this.btnloadScript.Click += new System.EventHandler(this.btnloadScript_Click);
             // 
             // formMain
             // 
@@ -398,6 +424,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.chrDaten)).EndInit();
             this.pnlDatenAuswahl.ResumeLayout(false);
             this.pnlDatenAuswahl.PerformLayout();
+            this.pnlToSet.ResumeLayout(false);
+            this.pnlToSet.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -434,6 +462,8 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.MaskedTextBox txbmScale3;
         private System.Windows.Forms.MaskedTextBox txbmScale2;
+        private System.Windows.Forms.TextBox txbLoadScript;
+        private System.Windows.Forms.Button btnloadScript;
     }
 }
 

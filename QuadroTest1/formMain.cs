@@ -43,7 +43,7 @@ namespace QuadroTest1
             zyklTimer.Start();
             chrDaten.Series.Clear();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 pnlToSet.Controls.Add(new settingsUI(mKommu));
             }
@@ -271,6 +271,11 @@ namespace QuadroTest1
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveExcel.saveInExcel(chrDaten.Series);
+        }
+
+        private void btnloadScript_Click(object sender, EventArgs e)
+        {
+            Scripting.runScript();
         }
 
     }
