@@ -74,7 +74,7 @@ namespace QuadroTest1
         private ConcurrentQueue<byte[]> allrecData;
 
 
-        public Queue<byte[]> allDataForTB;
+        public Queue<string> allDataForTB;
         public Queue<armRecVal> recData;
         public int cntRec = 0;
         public int cntSend = 0;
@@ -90,7 +90,7 @@ namespace QuadroTest1
         {
             mKommunikatorState = kommunikatorStateTyp.disconnected;
             allrecData = new ConcurrentQueue<byte[]>();
-            allDataForTB = new Queue<byte[]>();
+            allDataForTB = new Queue<string>();
             recData = new Queue<armRecVal>();
             toRequest = new List<armRequestValue>();
             toSet = new Queue<armSetting>();
@@ -215,9 +215,11 @@ namespace QuadroTest1
 
         private void analyseRec(byte[] ptoAnalyse)
         {
+            string debugString = string.Empty;
             if(ptoAnalyse==null || ptoAnalyse.Length == 0)
                 return;
             byte command = ptoAnalyse[0];
+            debugString += Convert.ToChar(command) + "\t";
             cntRec++;
             switch (command)
             {
@@ -238,6 +240,7 @@ namespace QuadroTest1
                     {
                         recData.Dequeue();
                     }
+                    debugString += Convert.ToChar(ptoAnalyse[1]) + highValv;
                     break;
                 case 119: //w
                     byte[] bufferw = {ptoAnalyse[5],ptoAnalyse[4],ptoAnalyse[3],ptoAnalyse[2]};
@@ -247,6 +250,7 @@ namespace QuadroTest1
                     {
                         recData.Dequeue();
                     }
+                    debugString += Convert.ToChar(ptoAnalyse[1]) + highValw;
                     break;
                 case 86://V
                     byte[] bufferV = { ptoAnalyse[3], ptoAnalyse[2] };
@@ -258,6 +262,7 @@ namespace QuadroTest1
                     {
                         recData.Dequeue();
                     }
+                    debugString += Convert.ToChar(ptoAnalyse[1]) + highValV + " at " + highValVtime;
                     break;
                 case 87://W
                     byte[] bufferW = { ptoAnalyse[5], ptoAnalyse[4], ptoAnalyse[3], ptoAnalyse[2] };
@@ -269,11 +274,13 @@ namespace QuadroTest1
                     {
                         recData.Dequeue();
                     }
+                    debugString += Convert.ToChar(ptoAnalyse[1]) + highValW + "\t at \t" + highValWtime;
                     break;
                 default:
                     Debug.WriteLine("Dropped Message Coded with: " + ptoAnalyse);
                     break;
             }
+            allDataForTB.Enqueue(debugString);
         }
 
         public void queRequestValue(byte pcode, bool pstart, bool pstop)
@@ -428,7 +435,6 @@ namespace QuadroTest1
                         byte[] toAnalyse;
                         if (allrecData.TryDequeue(out toAnalyse))
                         {
-                            allDataForTB.Enqueue(toAnalyse);
                             analyseRec(toAnalyse);
                         }
                     }
@@ -447,7 +453,6 @@ namespace QuadroTest1
                         byte[] toAnalyse;
                         if (allrecData.TryDequeue(out toAnalyse))
                         {
-                            allDataForTB.Enqueue(toAnalyse);
                             analyseRec(toAnalyse);
                         }
                     }

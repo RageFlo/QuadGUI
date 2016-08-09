@@ -43,7 +43,7 @@ namespace QuadroTest1
             zyklTimer.Start();
             chrDaten.Series.Clear();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 pnlToSet.Controls.Add(new settingsUI(mKommu));
             }
@@ -114,11 +114,38 @@ namespace QuadroTest1
                 mKommu.mKommunikatorState == Kommunikator.kommunikatorStateTyp.connecting)
             {
                 while (mKommu.allDataForTB.Count > 0)
-                    //txtbAllData.Text += mKommu.allDataForTB.Dequeue() + "\n";
-                mKommu.allDataForTB.Dequeue();
+                {
+                    string[] lines = txtbAllData.Lines;
+                    //txtbAllData.Text +=  "xxx\r\n";
+                    if (lines.Length > 40)
+                    {
+                        lines = lines.Skip(lines.Length - 20).ToArray();
+                    }
+                    txtbAllData.Lines = lines;
+                    if (!chrPaused)
+                        txtbAllData.AppendText("\r\n" + mKommu.allDataForTB.Dequeue());
+                    else
+                        mKommu.allDataForTB.Dequeue();
+                }
             }
         }
-
+        //private string byteArrayToString(byte[] pBytes)
+        //{
+            
+        //    string temp = string.Empty;
+        //    for(int i = 0; i < pBytes.Length; i++){
+        //        byte curByte = pBytes[i];
+        //        if (i > 0) {
+        //            temp += Convert.ToInt32(curByte) + " ";
+        //        }
+        //        else
+        //        {
+        //            temp += Convert.ToChar(curByte); ;
+        //        }
+               
+        //    }
+        //    return temp;
+        //}
         private void Form1_Load(object sender, EventArgs e)
         {
             String[] ports = SerialPort.GetPortNames();
@@ -177,7 +204,7 @@ namespace QuadroTest1
             double newScale;
             try { 
                 newCode = Convert.ToByte(txbmCode.Text);
-                newScale = Convert.ToDouble(txbmScale.Text);
+                newScale = Convert.ToDouble(txbmScale1.Text) / Convert.ToDouble(txbmScale2.Text) * Math.Pow(10,Convert.ToDouble(txbmScale3.Text));
             }
             catch
             {
@@ -241,6 +268,15 @@ namespace QuadroTest1
             chrPaused = btnPause.Checked;
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveExcel.saveInExcel(chrDaten.Series);
+        }
+
+        private void btnloadScript_Click(object sender, EventArgs e)
+        {
+            Scripting.runScript();
+        }
 
     }
 }
